@@ -7,6 +7,9 @@ const errorMessageEl = document.getElementById('error-msg');
 //input
 const usernameInput = document.getElementById('User-name');
 
+usernameInput.value = "";
+localStorage.clear();
+
 
 createBtn.addEventListener('click', () => {
     const userName = usernameInput.value;
@@ -15,6 +18,7 @@ createBtn.addEventListener('click', () => {
         usernameInput.value = "";
         ErrorAnimation("Invalid username")
     } else {
+        localStorage.setItem('User', userName);
         window.location = "pages/create.html"
     }
 })
