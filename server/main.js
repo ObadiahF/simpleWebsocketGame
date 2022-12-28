@@ -1,19 +1,11 @@
-const WebSocket = require('ws');
-const wss = new WebSocket.Server({ port: 7071 });
+import { WebSocketServer } from 'ws';
 
-const clients = new Map();
+const wss = new WebSocketServer({ port: 8080 });
 
-console.log("Starting...")
-
-wss.on('connection', (ws) => {
-    console.log("a user as connected!")
-    ws.send("sup")
-})
-
-wss.on('close', (ws) => {
-    console("client as dissconnected!")
-})
-
-wss.on('message', function message(data) {
-    console.log('received: %s', data);
+wss.on('connection', function connection(ws) {
+  ws.on('message', function message(data) {
+    console.log('%s', data);
   });
+
+  ws.send('something');
+});

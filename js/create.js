@@ -41,7 +41,7 @@ createGameBtn.addEventListener('click', () => {
             "Privacy": privacy
         }
         //connect to websocket
-        const ws = new WebSocket('ws://localhost:7071');
+        const ws = new WebSocket('ws://localhost:8080');
         ws.addEventListener('open', () => {
 
             ws.send("hey man!")
