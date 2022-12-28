@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/create.css">
+    <script src="/js/create.js" defer></script>
+    <title>WebSocket | Create Game</title>
+</head>
+<body>
+    <div class="heading-container">
+        <div class="seprate"><h1>WebSocket</h1></div>
+        <div class="seprate"><h2>Create Game</h2></div>
+    </div>
+
+    <div class="options-container">
+        <div class="seprate"><h1>Select Gamemode</h1></div>
+        <div class="seprate">
+            <button type="reset" class="gamemode gamemode2">Addition</button>
+            <button type="reset" class="gamemode gamemode2">Subtraction</button>
+            <button type="reset" class="gamemode gamemode2">Multiplication</button>
+            <button type="reset" class="gamemode gamemode2">Division</button>
+            <button type="reset" class="gamemode gamemode2">Mixture</button>
+        </div>
+        <div class="seprate"><h1>Max Players</h1></div>
+        <div class="seprate">
+            <button class="players gamemode">2</button>
+            <button class="players gamemode">3</button>
+            <button class="players gamemode">4</button>
+        </div>
+
+        <div class="seprate"><h1>Match Privacy</h1></div>
+        <div class="seprate">
+            <button class="privacy gamemode">Private</button>
+            <button class="privacy gamemode">Public</button>
+        </div>
+
+        <div class="seprate space">
+            <button id="create-game" class="gamemode">Create Game</button>
+
+        </div>
+    </div>
+    
+    <div id="error">
+        <h1>Error!</h1>
+        <h3 id="error-msg">This is an error message</h3>
+    </div>
+</body>
+</html>

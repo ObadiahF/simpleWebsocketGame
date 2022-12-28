@@ -36,38 +36,24 @@ body {
     font-size: 2.5rem;
 }
 
+.seprate {
+    padding: 0.5rem;
+}
+
 .options-container {
-    color: #e0e1dd;;
     transform: translateY(3rem);
+    color: #e0e1dd;;
     text-align: center;
     min-height: 50%;
     background-color: #415a77;
-    max-width: 60%;
+    max-width: 70%;
     margin: 0 auto;
     border-radius: 8px;
     padding: 0.5rem;
 }
 
-.options-container h3 {
-    font-size: 2.2rem;
-}
-
-#User-name {
-    font-size: 2rem;
-    max-width: 80%;
-    border-radius: 8px;
-    border-width:0px;
-    border:none;
-    outline: none;
-    background-color: #e0e1dd;
-}
-
-.seprate {
-    padding: 0.5rem;
-}
-
-.options-btn {
-    font-size: 2rem;
+.gamemode {
+    font-size: 1rem;
     padding: 0.5rem;
     border-radius: 8px;
     background-color: #e0e1dd;
@@ -76,33 +62,37 @@ body {
     cursor: pointer;
 }
 
-.options-btn:hover  {
+.gamemode:hover  {
     transition: 300ms ease;
     background-color: grey;
 }
 
-.plug {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    min-height: 2rem;
-    background-color:  #171515;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 32px;
+.players {
+    font-size: 2rem;
+    margin: 0 0.5rem;
+    padding: 0.5rem;
+    width: 4rem;
 }
 
-.plug h6 {
-    text-align: center;
-    color: white;
+.privacy {
+    font-size: 1.5rem;
 }
 
-.fa-github {
-    color: white;
-    font-size: 1.3rem;
-    margin-left: .5rem;;
-    cursor: pointer;
+#create-game {
+    font-size: 1.5rem;
+    width: 15rem;
+}
+
+#game-code {
+    display: inline-block;
+}
+
+.space {
+    margin: 2rem;
+}
+
+.clicked {
+    background-color: grey;
 }
 
 #error {

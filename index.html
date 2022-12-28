@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSocket || Math Game</title>
+    <title>WebSocket | Math Game</title>
     <link rel="stylesheet" href="styles/index.css">
     <script src="js/index.js" defer></script>
+    <script src="https://kit.fontawesome.com/db3c0028dc.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="heading-container">
@@ -16,10 +17,10 @@
 
     <div class="options-container">
         <div class="seprate">
-            <h3>User Name</h3>
+            <h3>Username</h3>
         </div>
         <div class="seprate">
-            <input type="text" id="User-name" maxlength="15" spellcheck="false">
+            <input type="text" id="User-name" maxlength="20" spellcheck="false">
         </div>
         
         <div class="seprate">
@@ -33,6 +34,12 @@
 
     <footer class="plug">
         <h6>Made by Obadiah Fusco </h6>
+        <i class="fa-brands fa-github" onclick="window.location.href = 'https://github.com/ObadiahF/simpleWebsocketGame'"></i>
     </footer>
+
+    <div id="error">
+        <h1>Error!</h1>
+        <h3 id="error-msg">This is an error message</h3>
+    </div>
 </body>
 </html>
