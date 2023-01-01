@@ -35,21 +35,24 @@ createGameBtn.addEventListener('click', () => {
     if (!players || !gameMode || !privacy) {
         ErrorAnimation("All fields required to create game.")
     } else {
-        const GameSettings = {
-            "GameMode": gameMode,
-            "Players": players,
-            "Privacy": privacy
-        }
+        const GameSettings = [
+            gameMode,
+            players,
+            privacy,
+            localStorage.getItem('User'),
+            "Creating",
+        ]
         //connect to websocket
-        const ws = new WebSocket('ws://localhost:8080');
-        ws.addEventListener('open', () => {
+            const ws = new WebSocket('ws://localhost:8080');
+            if (ws.close) ErrorAnimation('Error connecting to server.')
+            ws.addEventListener('open', () => {
 
-            ws.send("hey man!")
-
-            ws.addEventListener('message', (e) => {
-                alert(e.data);
+                ws.send(GameSettings)
+    
+                ws.addEventListener('message', (e) => {
+                    alert(e.data);
+                })
             })
-        })
     }
 })
 
