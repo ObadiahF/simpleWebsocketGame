@@ -1,0 +1,128 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* Pallet https://coolors.co/palette/0d1b2a-1b263b-415a77-778da9-e0e1dd */
+body {
+    background-color: #0d1b2a;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.heading-container {
+    transform: translateY(1rem);
+    min-height: 30%;
+    margin: 0 auto;
+    text-align: center;
+    padding: 1rem;
+    max-width: 80%;
+    color: #e0e1dd;
+    /*
+    border-radius: 30%;
+    background-color: #415a77;
+    */
+}
+
+.heading-container h1 {
+    font-size: 4rem;
+    font-weight: bold;
+}
+
+.heading-container h3 {
+    font-size: 2.5rem;
+}
+
+.heading-container h4 {
+    font-size: 1rem;
+}
+
+.seprate {
+    padding: 0.5rem;
+}
+
+.options-btn {
+    font-size: 2rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+    background-color: #e0e1dd;
+    color: black;
+    border: 2px solid black;
+    cursor: pointer;
+}
+
+.options-btn:hover  {
+    transition: 300ms ease;
+    background-color: grey;
+}
+
+.heading-container h2 {
+    font-size: 2.5rem;
+}
+
+#player-container {
+    display: flex;
+    justify-content: space-evenly;
+    color: #e0e1dd;;
+    transform: translateY(3rem);
+    text-align: center;
+    min-height: 50%;
+    flex-wrap: wrap;
+    background-color: #415a77;
+    width: 60%;
+    margin: 0 auto;
+    border-radius: 8px;
+    padding: 0.5rem;
+}
+
+.players {
+    margin: 0 2rem;
+}
+
+.players:hover {
+    text-decoration: line-through;
+    cursor: pointer;
+}
+
+.player-counter {
+    transform: translateY(4rem);
+}
+
+#start {
+    background-color: #e0e1dd;
+    border: 2px solid black;
+    padding: 1.5rem 6rem;
+    font-size: 2rem;
+    color: black;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-container {
+    margin-top: 2rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#start {
+    background-color: #e0e1dd;
+    border: 2px solid black;
+    padding: 1.5rem 6rem;
+    font-size: 2rem;
+    color: black;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#start:hover  {
+    transition: 300ms ease;
+    background-color: grey;
+}
+
+.host {
+    color: gold;
+}

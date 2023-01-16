@@ -13,6 +13,12 @@ let players;
 let gameMode;
 let privacy;
 
+const StartUp = () => {
+    if (!(localStorage.getItem('User'))) {
+        window.location = "/index.html";
+    }
+}
+
 gamemodeBtn.forEach(el => el.addEventListener('click', () => {
     gamemodeBtn.forEach(btn => btn.classList.remove('clicked'));
     el.classList.add('clicked');
@@ -35,13 +41,17 @@ createGameBtn.addEventListener('click', () => {
     if (!players || !gameMode || !privacy) {
         ErrorAnimation("All fields required to create game.")
     } else {
-        const GameSettings = [
-            gameMode,
-            players,
-            privacy,
-            localStorage.getItem('User'),
-            "Creating",
-        ]
+        const GameSettings = {
+            "GameMode": gameMode,
+            "Players": players,
+            "Privacy": privacy,
+            "Host:": localStorage.getItem('User')
+        }
+        
+        RequestToCreateNewGame(GameSettings);
+
+
+        /*
         //connect to websocket
             const ws = new WebSocket('ws://localhost:8080');
             if (ws.close) ErrorAnimation('Error connecting to server.')
@@ -50,9 +60,17 @@ createGameBtn.addEventListener('click', () => {
                 ws.send(GameSettings)
     
                 ws.addEventListener('message', (e) => {
-                    alert(e.data);
+                    const message = e.data.split(',');
+                    console.log(message)
+                   if (message[0] == 200) {
+                    window.location = "./gameLobby.html"
+                    localStorage.setItem("Gamecode", message[1]);
+                   } else {
+                    ErrorAnimation("Error creating game.")
+                   }
                 })
             })
+            */
     }
 })
 
@@ -64,3 +82,20 @@ const ErrorAnimation = (errorMsg) => {
         errorContainer.style.animation = "up 3s ease-out";
         setTimeout(() => {errorContainer.style.display = "none";}, 2000)
     }, 4000)}
+
+
+//send to server:
+
+const RequestToCreateNewGame = async (GameSettings) => {
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        //body: JSON.stringify(GameSettings)
+    };
+
+    const response = await fetch("https://localhost:3000/", requestOptions)
+    await console.log(response);
+}
+
+StartUp();
+
