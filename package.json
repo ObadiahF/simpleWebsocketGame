@@ -18,9 +18,9 @@
   },
   "homepage": "https://github.com/ObadiahF/simpleWebsocketGame#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2",
-    "http": "^0.0.1-security",
-    "socket.io": "^4.5.4"
+    "fs": "^0.0.1-security"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"

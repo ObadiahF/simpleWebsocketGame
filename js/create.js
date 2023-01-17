@@ -43,9 +43,12 @@ createGameBtn.addEventListener('click', () => {
     } else {
         const GameSettings = {
             "GameMode": gameMode,
-            "Players": players,
+            "MaxPlayers": players,
             "Privacy": privacy,
-            "Host:": localStorage.getItem('User')
+            "Host": localStorage.getItem('User'),
+            "Players": [
+                localStorage.getItem("User")
+            ]
         }
         
         RequestToCreateNewGame(GameSettings);
@@ -90,11 +93,11 @@ const RequestToCreateNewGame = async (GameSettings) => {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        //body: JSON.stringify(GameSettings)
+        body: JSON.stringify(GameSettings)
     };
 
-    const response = await fetch("https://localhost:3000/", requestOptions)
-    await console.log(response);
+    const response = await fetch("http://localhost:8080", requestOptions)
+    console.log(response)
 }
 
 StartUp();
