@@ -42,9 +42,9 @@ createGameBtn.addEventListener('click', () => {
         errorAnimation("All fields required to create game.")
     } else {
         const gameSettings = {
-            "gameMode": gameMode,
+            gameMode,
             "maxPlayers": players,
-            "privacy": privacy,
+            privacy,
             "host": localStorage.getItem('User'),
             "players": [
                 localStorage.getItem("User")
