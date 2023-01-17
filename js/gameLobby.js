@@ -1,16 +1,15 @@
 const playerContainerEl = document.getElementById('player-container');
 const playerCounterEl = document.getElementById('player');
 const startBtn = document.getElementById('start');
-const GameCodeEl = document.getElementById('Game-code')
-const GameCode = localStorage.getItem('Gamecode')
+const gameCodeEl = document.getElementById('Game-code')
+const gameCode = localStorage.getItem('Gamecode')
 
 let currentPlayers = 1;
 let players = [];
 
 
-
-const StartUp = () => {
-    if (!(GameCode) || !(localStorage.getItem('User'))) {
+const startUp = () => {
+    if (!(gameCode) || !(localStorage.getItem('User'))) {
         window.location = "/index.html";
     } else {
         //First Player Joined
@@ -20,19 +19,19 @@ const StartUp = () => {
         playerContainerEl.appendChild(Host);
 
         //setup Gamecode
-        GameCodeEl.textContent = `Game Code: ${GameCode}`
+        gameCodeEl.textContent = `Game Code: ${gameCode}`
     }
 }
 
 
-const PlayerJoin = () => {
-    const Player = document.createElement('h1');
-        Player.classList.add('players')
+const playerJoin = () => {
+    const playerName = document.createElement('h1');
+        playerName.classList.add('players')
         //grab from server
-        Player.textContent = "Grab from server"
+        playerName.textContent = "Grab from server"
 
-        playerContainerEl.appendChild(Player);
-        players.push(Player);
+        playerContainerEl.appendChild(playerName);
+        players.push(playerName);
 
         console.log(players)
         currentPlayers++;
@@ -50,9 +49,7 @@ const PlayerJoin = () => {
 }
 
 startBtn.addEventListener('click', () => {
-    PlayerJoin();
+    playerJoin();
 })
 
-
-
-StartUp();
+startUp();

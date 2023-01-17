@@ -1,10 +1,10 @@
-//btns
+// buttons
 const createBtn = document.getElementById('create-game');
 const joinBtn = document.getElementById('join-game');
-//errors
+// errors
 const errorContainer = document.getElementById('error');
 const errorMessageEl = document.getElementById('error-msg');
-//input
+// input
 const usernameInput = document.getElementById('User-name');
 
 usernameInput.value = "";
@@ -16,7 +16,7 @@ createBtn.addEventListener('click', () => {
     //check if the user is just spaces
     if (userName.trim().length === 0) {
         usernameInput.value = "";
-        ErrorAnimation("Invalid username")
+        errorAnimation("Invalid username")
     } else {
         localStorage.setItem('User', userName);
         window.location = "pages/create.html"
@@ -28,17 +28,18 @@ joinBtn.addEventListener('click', () => {
     //check if the user is just spaces
     if (userName.trim().length === 0) {
         usernameInput.value = "";
-        ErrorAnimation("Invalid username")
+        errorAnimation("Invalid username")
     } else {
         window.location = "pages/join.html"
     }
 })
 
-const ErrorAnimation = (errorMsg) => {
+const errorAnimation = (errorMsg) => {
     errorMessageEl.textContent = errorMsg;
     errorContainer.style.display = "block";
     errorContainer.style.animation = "down 1s ease-out";
     setTimeout(() => {
         errorContainer.style.animation = "up 3s ease-out";
-        setTimeout(() => {errorContainer.style.display = "none";}, 2000)
-    }, 4000)}
+        setTimeout(() => { errorContainer.style.display = "none"; }, 2000)
+    }, 4000)
+}

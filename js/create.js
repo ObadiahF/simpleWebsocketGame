@@ -1,26 +1,26 @@
-//btns
+// buttons
 const howManyPlayersBtn = document.querySelectorAll('.players');
 const privacyBtn = document.querySelectorAll('.privacy');
 const createGameBtn = document.getElementById('create-game');
-const gamemodeBtn = document.querySelectorAll('.gamemode2');
+const gameModeBtn = document.querySelectorAll('.gamemode2');
 
-//errors
+// errors
 const errorContainer = document.getElementById('error');
 const errorMessageEl = document.getElementById('error-msg');
 
-//settings
+// settings
 let players;
 let gameMode;
 let privacy;
 
-const StartUp = () => {
+const startUp = () => {
     if (!(localStorage.getItem('User'))) {
         window.location = "/index.html";
     }
 }
 
-gamemodeBtn.forEach(el => el.addEventListener('click', () => {
-    gamemodeBtn.forEach(btn => btn.classList.remove('clicked'));
+gameModeBtn.forEach(el => el.addEventListener('click', () => {
+    gameModeBtn.forEach(btn => btn.classList.remove('clicked'));
     el.classList.add('clicked');
     gameMode = el.textContent;
 }))
@@ -39,28 +39,28 @@ privacyBtn.forEach(el => el.addEventListener('click', () => {
 
 createGameBtn.addEventListener('click', () => {
     if (!players || !gameMode || !privacy) {
-        ErrorAnimation("All fields required to create game.")
+        errorAnimation("All fields required to create game.")
     } else {
-        const GameSettings = {
-            "GameMode": gameMode,
-            "MaxPlayers": players,
-            "Privacy": privacy,
-            "Host": localStorage.getItem('User'),
-            "Players": [
+        const gameSettings = {
+            "gameMode": gameMode,
+            "maxPlayers": players,
+            "privacy": privacy,
+            "host": localStorage.getItem('User'),
+            "players": [
                 localStorage.getItem("User")
             ]
         }
-        
-        RequestToCreateNewGame(GameSettings);
+
+        requestToCreateNewGame(gameSettings);
 
 
         /*
         //connect to websocket
             const ws = new WebSocket('ws://localhost:8080');
-            if (ws.close) ErrorAnimation('Error connecting to server.')
+            if (ws.close) errorAnimation('Error connecting to server.')
             ws.addEventListener('open', () => {
 
-                ws.send(GameSettings)
+                ws.send(gameSettings)
     
                 ws.addEventListener('message', (e) => {
                     const message = e.data.split(',');
@@ -69,7 +69,7 @@ createGameBtn.addEventListener('click', () => {
                     window.location = "./gameLobby.html"
                     localStorage.setItem("Gamecode", message[1]);
                    } else {
-                    ErrorAnimation("Error creating game.")
+                    errorAnimation("Error creating game.")
                    }
                 })
             })
@@ -77,28 +77,37 @@ createGameBtn.addEventListener('click', () => {
     }
 })
 
-const ErrorAnimation = (errorMsg) => {
+const errorAnimation = (errorMsg) => {
     errorMessageEl.textContent = errorMsg;
     errorContainer.style.display = "block";
     errorContainer.style.animation = "down 1s ease-out";
     setTimeout(() => {
         errorContainer.style.animation = "up 3s ease-out";
-        setTimeout(() => {errorContainer.style.display = "none";}, 2000)
-    }, 4000)}
+        setTimeout(() => { errorContainer.style.display = "none"; }, 2000)
+    }, 4000)
+}
 
+// send to server:
 
-//send to server:
+const requestToCreateNewGame = async (gameSettings) => {
 
-const RequestToCreateNewGame = async (GameSettings) => {
+    console.log(gameSettings);
+
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(GameSettings)
+        body: JSON.stringify(gameSettings)
     };
 
-    const response = await fetch("http://localhost:8080", requestOptions)
-    console.log(response)
+    const response = await fetch("http://localhost:8080", requestOptions);
+    // NOTE:
+    // this is why i don't like fetch API- axios would just give you the body without needing to parse the readable stream with .json() 🙄
+    // but it's probably a PINA to setup axios for the browser so just use fetch i guess 🤷
+    // SOLUTION: parse readableStream with .json();
+    const { gameCode } = await response.json();
+    console.log(gameCode);
+    return gameCode;
+
 }
 
-StartUp();
-
+startUp();
