@@ -81,6 +81,11 @@ const errorAnimation = (errorMsg) => {
     errorMessageEl.textContent = errorMsg;
     errorContainer.style.display = "block";
     errorContainer.style.animation = "down 1s ease-out";
+
+    gamemodeBtn.forEach(btn => btn.classList.remove('clicked'));
+    howManyPlayersBtn.forEach(btn => btn.classList.remove('clicked'));
+    privacyBtn.forEach(btn => btn.classList.remove('clicked'));
+
     setTimeout(() => {
         errorContainer.style.animation = "up 3s ease-out";
         setTimeout(() => { errorContainer.style.display = "none"; }, 2000)
