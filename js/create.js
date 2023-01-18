@@ -51,29 +51,10 @@ createGameBtn.addEventListener('click', () => {
             ]
         }
         
-        RequestToCreateNewGame(GameSettings);
-
-
-        /*
-        //connect to websocket
-            const ws = new WebSocket('ws://localhost:8080');
-            if (ws.close) ErrorAnimation('Error connecting to server.')
-            ws.addEventListener('open', () => {
-
-                ws.send(GameSettings)
-    
-                ws.addEventListener('message', (e) => {
-                    const message = e.data.split(',');
-                    console.log(message)
-                   if (message[0] == 200) {
-                    window.location = "./gameLobby.html"
-                    localStorage.setItem("Gamecode", message[1]);
-                   } else {
-                    ErrorAnimation("Error creating game.")
-                   }
-                })
-            })
-            */
+        const Gamecode = RequestToCreateNewGame(GameSettings);
+        Gamecode.catch(ErrorAnimation("Error connecting to server"))
+        console.log(Gamecode);
+        
     }
 })
 
@@ -81,6 +62,11 @@ const ErrorAnimation = (errorMsg) => {
     errorMessageEl.textContent = errorMsg;
     errorContainer.style.display = "block";
     errorContainer.style.animation = "down 1s ease-out";
+
+    gamemodeBtn.forEach(btn => btn.classList.remove('clicked'));
+    howManyPlayersBtn.forEach(btn => btn.classList.remove('clicked'));
+    privacyBtn.forEach(btn => btn.classList.remove('clicked'));
+
     setTimeout(() => {
         errorContainer.style.animation = "up 3s ease-out";
         setTimeout(() => {errorContainer.style.display = "none";}, 2000)
@@ -96,8 +82,10 @@ const RequestToCreateNewGame = async (GameSettings) => {
         body: JSON.stringify(GameSettings)
     };
 
-    const response = await fetch("http://localhost:8080", requestOptions)
-    console.log(response)
+    const response = await fetch("http://localhost:8080", requestOptions);
+    const Gamecode = response.json();
+    return Gamecode;
+    
 }
 
 StartUp();

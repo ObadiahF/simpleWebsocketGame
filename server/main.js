@@ -4,6 +4,7 @@ const cors = require('cors');
 const app = express();
 const port = 8080;
 
+let games = {}
 app.use( express.json(), cors('*') );
 
 
@@ -18,9 +19,8 @@ app.post('/', (req, res) => {
     res.status(400).send("Not all requirements met")
   } else {
     const Gamecode = Math.random().toString().substring(2, 8);
-    console.log(Gamecode);
-    //console.log(body);
-   res.json({"Gamecode": Gamecode}), {depth: null}
+    
+    res.status(200).send(Gamecode);
   }
   
 })
