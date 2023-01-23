@@ -52,28 +52,6 @@ createGameBtn.addEventListener('click', () => {
         }
 
         requestToCreateNewGame(gameSettings);
-
-
-        /*
-        //connect to websocket
-            const ws = new WebSocket('ws://localhost:8080');
-            if (ws.close) errorAnimation('Error connecting to server.')
-            ws.addEventListener('open', () => {
-
-                ws.send(gameSettings)
-    
-                ws.addEventListener('message', (e) => {
-                    const message = e.data.split(',');
-                    console.log(message)
-                   if (message[0] == 200) {
-                    window.location = "./gameLobby.html"
-                    localStorage.setItem("Gamecode", message[1]);
-                   } else {
-                    errorAnimation("Error creating game.")
-                   }
-                })
-            })
-            */
     }
 })
 
@@ -82,7 +60,7 @@ const errorAnimation = (errorMsg) => {
     errorContainer.style.display = "block";
     errorContainer.style.animation = "down 1s ease-out";
 
-    gamemodeBtn.forEach(btn => btn.classList.remove('clicked'));
+    gameModeBtn.forEach(btn => btn.classList.remove('clicked'));
     howManyPlayersBtn.forEach(btn => btn.classList.remove('clicked'));
     privacyBtn.forEach(btn => btn.classList.remove('clicked'));
 
@@ -96,22 +74,21 @@ const errorAnimation = (errorMsg) => {
 
 const requestToCreateNewGame = async (gameSettings) => {
 
-    console.log(gameSettings);
-
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(gameSettings)
     };
 
-    const response = await fetch("http://localhost:8080", requestOptions);
-    // NOTE:
-    // this is why i don't like fetch API- axios would just give you the body without needing to parse the readable stream with .json() 🙄
-    // but it's probably a PINA to setup axios for the browser so just use fetch i guess 🤷
-    // SOLUTION: parse readableStream with .json();
-    const { gameCode } = await response.json();
-    console.log(gameCode);
-    return gameCode;
+    const response = await fetch("http://localhost:8080", requestOptions)
+    if (response.status !== 200) {
+        errorAnimation('Error connecting to server')
+    } else {
+        const { gameCode } = await response.json();
+        console.log(gameCode);
+        return gameCode;
+    }
+    
 
 }
 
