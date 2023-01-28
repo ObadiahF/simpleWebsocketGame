@@ -14,6 +14,7 @@ let gameMode;
 let privacy;
 
 const startUp = () => {
+    localStorage.removeItem('gameCode');
     if (!(localStorage.getItem('User'))) {
         window.location = "/index.html";
     }
@@ -80,13 +81,14 @@ const requestToCreateNewGame = async (gameSettings) => {
         body: JSON.stringify(gameSettings)
     };
 
-    const response = await fetch("http://localhost:8080", requestOptions)
+    const response = await fetch("http://localhost:8080/createGame", requestOptions)
     if (response.status !== 200) {
         errorAnimation('Error connecting to server')
     } else {
         const { gameCode } = await response.json();
         console.log(gameCode);
-        return gameCode;
+        localStorage.setItem('gameCode', gameCode);
+        window.location = 'loading.html'
     }
     
 

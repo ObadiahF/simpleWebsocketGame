@@ -83,6 +83,12 @@ body {
     width: 15rem;
 }
 
+#exit {
+    margin-top: 0.5rem;
+    font-size: 1.5rem;
+    width: 13rem;
+}
+
 #game-code {
     display: inline-block;
 }
