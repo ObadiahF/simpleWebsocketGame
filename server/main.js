@@ -49,33 +49,61 @@ app.post('/createGame', (req, res) => {
     }
     Games.push(Game);
     console.log(`New game created with id: ${gameCode}`);
-    createGame(Game)
   } catch (err) {
     console.error(err);
     res.status(400).send("Not all requirements met.");
   }
 })
 
-const createGame = ((Game) => {
-
-})
 
 
 
 io.on('connection', (client) => {
   console.log('New websocket connection');
  
-  client.once('Username', (arg) => {
+  client.once('UserDetails', (User, Gamecode, mode) => {
     const Player = {
-      "Username": arg,
+      "Username": User,
       "Socket-id": client.id
     }
-    console.log(Player)
+    if (mode === "creating") {
+      setGameHost(User, Player);
+    }
+
+    if (mode === "joining") {
+      //joinGame(Player);
+    }
   })
    client.on('disconnect', () => {
     console.log('New websocket disconnected');
   });
 });
+
+const setGameHost = (User, Player) => {
+  Games.forEach(game => {
+    if (game.host === User) {
+      game.host = Player;
+      game.players.push(Player)
+      console.log(Games);
+      return
+    }
+  })
+}
+
+
+/*
+const joinGame = () => {
+  Games.forEach(game => {
+    if (game.players.length < game.maxPlayers) {
+      game.players.push(Player)
+      return 200
+    } else {
+      return "Game is Full"
+    }
+  })
+}
+
+*/
 
 server.listen(3000, () => {
   console.log('websocket port: 3000');

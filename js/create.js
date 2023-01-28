@@ -47,9 +47,7 @@ createGameBtn.addEventListener('click', () => {
             "maxPlayers": players,
             privacy,
             "host": localStorage.getItem('User'),
-            "players": [
-                localStorage.getItem("User")
-            ]
+            "players": []
         }
 
         requestToCreateNewGame(gameSettings);
@@ -86,8 +84,8 @@ const requestToCreateNewGame = async (gameSettings) => {
         errorAnimation('Error connecting to server')
     } else {
         const { gameCode } = await response.json();
-        console.log(gameCode);
         localStorage.setItem('gameCode', gameCode);
+        localStorage.setItem('mode', "creating");
         window.location = 'loading.html'
     }
     
