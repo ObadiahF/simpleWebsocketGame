@@ -65,7 +65,13 @@ const createGame = ((Game) => {
 io.on('connection', (client) => {
   console.log('New websocket connection');
  
-
+  client.once('Username', (arg) => {
+    const Player = {
+      "Username": arg,
+      "Socket-id": client.id
+    }
+    console.log(Player)
+  })
    client.on('disconnect', () => {
     console.log('New websocket disconnected');
   });
