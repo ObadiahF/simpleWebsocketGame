@@ -17,6 +17,7 @@ const io = require("socket.io")(server, {
 
 //gamestuff
 let Games = [];
+let GamesIndex = [];
 
 app.listen(port, () => {
   console.log(`Express Port: ${port}`)
@@ -28,11 +29,11 @@ app.post('/createGame', (req, res) => {
 
   try {
     const { body } = req;
-    const { gameMode, maxPlayers, privacy, host, players } = body;
+    const { gameMode, maxPlayers, privacy, host, players, status } = body;
 
     // NOTE:
     // camel case is king in JS (unless you're using classes)
-    if (!gameMode || !maxPlayers || !privacy || !host || !players) {
+    if (!gameMode || !maxPlayers || !privacy || !host || !players || !status) {
       throw Error(`Couldn't create game: ${JSON.stringify(body)}`);
     }
 
@@ -45,9 +46,11 @@ app.post('/createGame', (req, res) => {
       privacy,
       host,
       players,
-      gameCode
+      gameCode,
+      status
     }
     Games.push(Game);
+    GamesIndex.push(gameCode);
     console.log(`New game created with id: ${gameCode}`);
   } catch (err) {
     console.error(err);
@@ -60,50 +63,25 @@ app.post('/createGame', (req, res) => {
 
 io.on('connection', (client) => {
   console.log('New websocket connection');
- 
-  client.once('UserDetails', (User, Gamecode, mode) => {
+
+  client.on('JoinGame', (User, Gamecode) => {
     const Player = {
       "Username": User,
       "Socket-id": client.id
     }
-    if (mode === "creating") {
-      setGameHost(User, Player);
-    }
+    const game = GamesIndex.indexOf(Gamecode.toString())
+    Games[game].players.push(Player);
 
-    if (mode === "joining") {
-      //joinGame(Player);
-    }
+    console.log(Games[game].players);
+
+    client.to(Gamecode);
+    client.emit('successfullyJoined', "ok")
   })
    client.on('disconnect', () => {
     console.log('New websocket disconnected');
   });
 });
 
-const setGameHost = (User, Player) => {
-  Games.forEach(game => {
-    if (game.host === User) {
-      game.host = Player;
-      game.players.push(Player)
-      console.log(Games);
-      return
-    }
-  })
-}
-
-
-/*
-const joinGame = () => {
-  Games.forEach(game => {
-    if (game.players.length < game.maxPlayers) {
-      game.players.push(Player)
-      return 200
-    } else {
-      return "Game is Full"
-    }
-  })
-}
-
-*/
 
 server.listen(3000, () => {
   console.log('websocket port: 3000');

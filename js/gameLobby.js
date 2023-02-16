@@ -2,7 +2,31 @@ const playerContainerEl = document.getElementById('player-container');
 const playerCounterEl = document.getElementById('player');
 const startBtn = document.getElementById('start');
 const gameCodeEl = document.getElementById('Game-code')
-const gameCode = localStorage.getItem('Gamecode')
+const Username = localStorage.getItem('User');
+const gameCode = localStorage.getItem('gameCode');
+const socket = io('http://localhost:3000');
+const loadingEl = document.querySelector('.ring');
+const LobbyEl = document.querySelector('.lobby')
+
+
+socket.on("connect", () => {
+  
+    socket.emit('JoinGame', Username, gameCode)
+
+    socket.on('successfullyJoined', (args) => {
+        if (args === "ok") {
+            setTimeout(() => {
+                loadingEl.style.display = "none";
+                LobbyEl.style.display = "block";
+            }, 1000)
+        }
+    })
+});
+
+socket.on("disconnect", () => {
+    window.location = '/index.html'
+});
+
 
 let currentPlayers = 1;
 let players = [];

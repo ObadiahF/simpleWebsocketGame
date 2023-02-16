@@ -8,10 +8,16 @@
     <!-- These ones were also incorrect -->
     <link rel="stylesheet" href="../styles/gameLobby.css">
     <script src="../js/gameLobby.js" defer></script>
+    <script src="../js/loading.js" defer></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>    
     <title>WebSocket | Game Lobby</title>
 </head>
 
 <body>
+    <div class="ring">Joining
+        <span></span>
+      </div>
+    <div class="lobby">
     <div class="heading-container">
         <h1>Game Lobby</h1>
         <div class="seprate">
@@ -30,6 +36,7 @@
             <button id="start">Start</button>
         </div>
     </div>
+</div>
 </body>
 
 </html>
