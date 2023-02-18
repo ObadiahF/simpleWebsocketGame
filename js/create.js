@@ -15,6 +15,7 @@ let privacy;
 
 const startUp = () => {
     localStorage.removeItem('gameCode');
+    localStorage.removeItem('error')
     if (!(localStorage.getItem('User'))) {
         window.location = "/index.html";
     }

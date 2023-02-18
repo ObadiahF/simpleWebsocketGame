@@ -166,10 +166,6 @@ span:before
 
 .players {
     margin: 0 2rem;
-}
-
-.players:hover {
-    text-decoration: line-through;
     cursor: pointer;
 }
 
@@ -195,13 +191,13 @@ span:before
 }
 
 #start {
-    background-color: #e0e1dd;
+    background-color: grey;
     border: 2px solid black;
     padding: 1.5rem 6rem;
     font-size: 2rem;
     color: black;
     border-radius: 8px;
-    cursor: pointer;
+    cursor: not-allowed;
 }
 
 #start:hover  {
@@ -211,4 +207,5 @@ span:before
 
 .host {
     color: gold;
+    cursor: default;
 }

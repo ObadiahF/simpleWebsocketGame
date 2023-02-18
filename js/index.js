@@ -8,7 +8,14 @@ const errorMessageEl = document.getElementById('error-msg');
 const usernameInput = document.getElementById('User-name');
 
 usernameInput.value = "";
-localStorage.clear();
+
+const startUp = () => {
+    const err = localStorage.getItem('error');
+    if (err !== null) {
+        errorAnimation(err)
+    }
+    localStorage.clear();
+}
 
 
 createBtn.addEventListener('click', () => {
@@ -43,3 +50,5 @@ const errorAnimation = (errorMsg) => {
         setTimeout(() => { errorContainer.style.display = "none"; }, 2000)
     }, 4000)
 }
+
+startUp();

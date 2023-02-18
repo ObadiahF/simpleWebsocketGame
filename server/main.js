@@ -70,13 +70,22 @@ io.on('connection', (client) => {
       "Socket-id": client.id
     }
     const game = GamesIndex.indexOf(Gamecode.toString())
+    let host;
+    //check if game is full or if player name is already in use
+    if (Games[game].players.length === 0) {
+      host = true;
+    } else {
+      host = false;
+    }
     Games[game].players.push(Player);
 
     console.log(Games[game].players);
 
     client.to(Gamecode);
-    client.emit('successfullyJoined', "ok")
+    client.emit('successfullyJoined', ["ok", host])
   })
+
+
    client.on('disconnect', () => {
     console.log('New websocket disconnected');
   });
