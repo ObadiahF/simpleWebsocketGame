@@ -12,3 +12,186 @@ body {
     flex-direction: column;
     min-height: 100vh;
 }
+
+.title-container {
+    margin: 1rem auto;
+    padding: 2rem;
+    text-align: center;
+}
+
+.title-container h1 {
+    color: #e0e1dd;
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: auto;
+    margin: 0 auto;
+    padding: 1rem;
+    text-align: center;
+    height: 50vh;
+    width: 60%;
+    background-color: #415a77;
+    border-radius: 12px;
+    overflow-y: auto;
+}
+
+.container h1 {
+    color: #e0e1dd;
+    font-size: 1.5rem;
+    padding: 1rem 0;
+}
+
+.container h6 {
+    color: #e0e1dd;
+    font-size: 1rem;
+    padding: 1rem;
+}
+
+#Hosts::after {
+    content: "";
+    width: 4px;
+    background-color: red;
+    position: relative;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.join {
+    font-size: 1rem;
+    width: 8rem;
+    height: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    background-color: #e0e1dd;
+    color: black;
+    border: 2px solid black;
+    cursor: pointer;
+    padding: 1rem;
+    margin-top: 0.5rem;
+}
+
+.join:hover  {
+    transition: 300ms ease;
+    background-color: grey;
+}
+
+.GamecodeJoin {
+    padding: 3rem;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#Dash-join-btn {
+    font-size: 2rem;
+    width: 28rem;
+    height: 5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    background-color: #e0e1dd;
+    color: black;
+    border: 2px solid black;
+    cursor: pointer;
+    padding: 1rem;
+    margin-top: 0.5rem;
+}
+
+#Dash-join-btn:hover {
+    transition: 300ms ease;
+    background-color: grey;
+}
+
+.Gamecode-prompt {
+    display: flex;
+    flex-direction: column;
+    height: 40%;
+    width: 40%;
+    background-color: #0d1b2a;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 6px;
+    display: none;
+    border: 2px solid #e0e1dd;
+}
+
+.Gamecode-prompt h1 {
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0 auto;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    text-align: center;
+}
+
+#Gamecode {
+    width: 40%;
+    padding: 0.5rem;
+    text-align: center;
+    margin-left: 30%;
+    border-radius: 8px;
+    border: 2px solid black;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+#Gamecode:focus {
+    outline: none;
+}
+
+#Join-by-gamecode {
+    font-size: 2rem;
+    width: 60%;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    border-radius: 8px;
+    background-color: #e0e1dd;
+    color: black;
+    border: 2px solid black;
+    cursor: pointer;
+    padding: 1rem;
+    margin-top: 0.5rem;
+}
+
+#Join-by-gamecode:hover {
+    transition: 300ms ease;
+    background-color: grey;
+}
+
+#x {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 2rem;
+}
+
+#x:hover {
+    color: red;
+    transition: 200ms ease;
+    cursor: pointer;
+}
+
+#error {
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    display: none;
+}

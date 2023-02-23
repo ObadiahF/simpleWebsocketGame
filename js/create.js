@@ -47,7 +47,7 @@ createGameBtn.addEventListener('click', () => {
             gameMode,
             "maxPlayers": players,
             privacy,
-            "host": localStorage.getItem('User'),
+            "host": {},
             "players": [],
             "status": "lobby"
         }

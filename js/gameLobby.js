@@ -29,19 +29,19 @@ socket.on("connect", () => {
 
 socket.on('connect_error', () => {
     localStorage.setItem('error', "Failed to connect to server.")
-    window.location = '/index.html'
+    window.location = '../index.html'
 })
 
 
 
 socket.on("disconnect", () => {
     localStorage.setItem('error', "Failed to connect to server.")
-    window.location = '/index.html'
+    window.location = '../index.html'
 });
 
 const startUp = () => {
     if (!(gameCode) || !(localStorage.getItem('User'))) {
-        window.location = "/index.html";
+        window.location = "../index.html";
     } else {
         //setup Gamecode
         gameCodeEl.textContent = `Game Code: ${gameCode}`

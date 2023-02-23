@@ -4,9 +4,43 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="../styles/join.css">
+    <script src="../js/join.js" defer></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>    
+    <title>WebSocket | Join Game</title>
 </head>
 <body>
-    <h1>Join</h1>
+    <div class="title-container">
+        <h1>Join Game</h1>
+    </div>
+    <div class="container">
+            <div id="Hosts">
+                <H1>Host</H1>
+                
+            </div>
+            <div id="Games">
+                <H1>Mode</H1>
+            </div>
+            <div id="PlayerNum">
+                <H1>Players</H1>
+            </div>
+            <div id="joinBtns">
+                <h1 style="opacity: 0; cursor:default">Hi</h1>
+
+            </div>
+    </div>
+
+    <div class="GamecodeJoin">
+        <button id="Dash-join-btn">Join By Gamecode</button>
+    </div>
+
+    <div class="Gamecode-prompt">
+        <button id="x">X</button>
+        <h1>Join By Game Code</h1>
+        <input type="text" id="Gamecode" maxlength="6">
+        <button id="Join-by-gamecode">Join</button>
+    </div>
+
+    <h1 id="error">Error connecting to server</h1>
 </body>
 </html>
