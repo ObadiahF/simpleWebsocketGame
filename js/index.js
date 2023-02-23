@@ -37,6 +37,7 @@ joinBtn.addEventListener('click', () => {
         usernameInput.value = "";
         errorAnimation("Invalid username")
     } else {
+        localStorage.setItem('User', userName);
         window.location = "pages/join.html"
     }
 })

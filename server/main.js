@@ -96,7 +96,7 @@ io.on('connection', (client) => {
       client.emit('successfullyJoined', ["Game is full", host])
     } else {
     Games[game].players.push(Player);
-
+    io.emit('PlayersChanged', (Games[game]))
     if (Games[game].privacy !== "Private") {
      io.emit("newGame", Games[game]);
      publicGames.push(Games[game]);
@@ -116,7 +116,7 @@ io.on('connection', (client) => {
         if (player.SocketId === user) {
           const index = game.players.indexOf(user);
           game.players.splice(index, 1)
-
+          io.emit('PlayersChanged', (game))
           if (game.host.SocketId === user) {
             io.to(game.gameCode).emit("GameClosed");
             const GamesIndex = Games.indexOf(game);
