@@ -8,6 +8,8 @@ app.use(express.json());
 
 //websocket setup
 const http = require('http');
+const { resolve } = require('path');
+const { rejects } = require('assert');
 const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {
@@ -86,17 +88,17 @@ io.on('connection', (client) => {
     let host;
     //check if game is full or if player name is already in use
     if (Games[game].players.length === 0) {
-      host = true;
-      Games[game].host = Player;
-    } else {
-      host = false;
+      Games[game].host = Player;     
     }
 
     if (Games[game].players.length == Games[game].maxPlayers) {
-      client.emit('successfullyJoined', ["Game is full", host])
+      client.emit('successfullyJoined', ["Game is full"])
     } else {
     Games[game].players.push(Player);
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     if (Games[game].privacy !== "Private") {
      io.emit("newGame", Games[game]);
      publicGames.push(Games[game]);
@@ -104,7 +106,7 @@ io.on('connection', (client) => {
 
 
     client.to(Gamecode);
-    client.emit('successfullyJoined', ["ok", host])
+    io.emit('successfullyJoined', ["ok", Games[game]])
     }
   })
 
@@ -129,7 +131,43 @@ io.on('connection', (client) => {
     })
 
   });
+
+  client.on('PlayerKicked', async (data) => {
+    const gameCodeArg = data[0];
+    const playerArg = data[1]
+
+    const player = findPlayer(playerArg, gameCodeArg);
+    const game = findGame(gameCodeArg);
+
+    
+    game.players.splice(game.players.indexOf(player), 1);
+    io.emit('successfullyJoined', ["ok", game]);
+
+  })
+
+  
 });
+
+const findPlayer = (playerArg, GameCode) => {
+  const Game = findGame(GameCode);
+  let kickedPlayer;
+  Game.players.forEach(player => {
+    if (player.SocketId === playerArg) {
+      kickedPlayer = player;
+    }
+  })
+  return kickedPlayer;
+}
+
+const findGame = (GameCode) => {
+  let Game;
+  Games.forEach(game => {
+    if (game.gameCode == GameCode) {
+      Game = game;
+    }
+  })
+  return Game;
+}
 
 
 server.listen(3000, () => {

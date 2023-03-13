@@ -10,7 +10,6 @@ let players = [];
 const socket = io('http://localhost:3000');
 
 socket.on("connect", () => {
-    let host;
     socket.emit('JoinGame', Username, gameCode)
 
     socket.on('successfullyJoined', (args) => {
@@ -19,11 +18,14 @@ socket.on("connect", () => {
                 loadingEl.style.display = "none";
                 LobbyEl.style.display = "block";
             }, 1000)
+        } else {
+            window.location = '/index.html'
         }
 
-        host = args[1];
-        playerJoin(host);
+        playerJoin(args[1])
     })
+
+    
 });
 
 
@@ -49,35 +51,55 @@ const startUp = () => {
 }
 
 
-const playerJoin = (host) => {
-    const playerName = document.createElement('h1');
+const playerJoin = (Game) => {
+    let inGame = false;
+    const Players = Game.players;
+    Players.forEach(player => {
+        if (player.SocketId === socket.id) {
+            inGame = true;
+        }
+    })
+
+    if (inGame === false) {
+        localStorage.setItem('error', "You have been kicked by the host.")
+        window.location = '../index.html'
+    }
+
+    players.forEach(player => {
+        player.remove();
+        players = [];
+    })
+    Players.forEach(player => {
+        const playerName = document.createElement('h1');
+        playerName.value = player.SocketId;
         playerName.classList.add('players')
-        if (host === true) {
+        if (Game.host.SocketId === player.SocketId) {
             playerName.classList.add('host')
-            playerName.textContent = localStorage.getItem('User') + " (Host)";
+            playerName.textContent = `${player.Username}👑`;
         } else {
-            playerName.textContent = "Grab from server"
+            playerName.textContent = player.Username;
         }
         players.push(playerName);
-        playerCounterEl.textContent = `${players.length}/4`
+        playerCounterEl.textContent = `${players.length}/${Game.maxPlayers}`
         playerContainerEl.appendChild(playerName);
-        console.log(players);
+    })
 
         players.forEach(player => player.addEventListener('click', () => {
-            if (host === true) {
+            if (Game.host.SocketId === socket.id) {
                 if (!(player.classList.contains('host'))) {
                   players.splice(players.indexOf(player));
                 player.remove();
-                console.log(players);
-                playerCounterEl.textContent = `${players.length}/4`  
+                playerCounterEl.textContent = `${players.length}/4`;
+                socket.emit('PlayerKicked', ([Game.gameCode, player.value]));
                 }
             }
         }))
 
         players.forEach(player => player.addEventListener('mouseover', (event) => {
-            if (host === true) {
+            if (Game.host.SocketId === socket.id) {
                 if (!(event.target.classList.contains('host'))) {
                     event.target.style.textDecoration = 'line-through';
+                    event.target.style.cursor = "pointer"
                 }
             }
         }))
