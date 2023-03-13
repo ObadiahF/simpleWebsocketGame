@@ -95,10 +95,6 @@ io.on('connection', (client) => {
       client.emit('successfullyJoined', ["Game is full"])
     } else {
     Games[game].players.push(Player);
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     if (Games[game].privacy !== "Private") {
      io.emit("newGame", Games[game]);
      publicGames.push(Games[game]);
