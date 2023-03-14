@@ -21,7 +21,7 @@ socket.on("connect", () => {
         } else {
             window.location = '/index.html'
         }
-
+        if (args[1].host.SocketId === socket.id) startBtn.style.display = 'block';
         playerJoin(args[1])
     })
 
@@ -111,9 +111,11 @@ const playerJoin = (Game) => {
         if (players.length >= 2) {
             startBtn.style.backgroundColor = '#e0e1dd';
             startBtn.style.cursor = 'pointer';
+            startBtn.classList.add('startActive')
         } else {
             startBtn.style.backgroundColor = 'grey';
             startBtn.style.cursor = 'not-allowed';
+            startBtn.classList.remove('startActive')
         }
 }
 

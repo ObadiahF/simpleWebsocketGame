@@ -37,10 +37,15 @@
     <div class="Gamecode-prompt">
         <button id="x">X</button>
         <h1>Join By Game Code</h1>
-        <input type="text" id="Gamecode" maxlength="6">
+        <input type="text" id="Gamecode" maxlength="6" autocomplete="off">
         <button id="Join-by-gamecode">Join</button>
     </div>
 
-    <h1 id="error">Error connecting to server</h1>
+    <h1 id="noGames">Error connecting to server</h1>
+    
+    <div id="error">
+        <h1>Error!</h1>
+        <h3 id="error-msg">This is an error message</h3>
+    </div>
 </body>
 </html>

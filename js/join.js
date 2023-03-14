@@ -6,7 +6,10 @@ const OpenBoxEl = document.getElementById('Dash-join-btn');
 const GamecodePromptEl = document.querySelector('.Gamecode-prompt');
 const exitBtnEL = document.getElementById('x');
 const GamecodeInput = document.getElementById('Gamecode')
-const ErrorEl = document.getElementById('error')
+const JoinByGameCodeBtn = document.getElementById('Join-by-gamecode');
+const ErrorEl = document.getElementById('noGames')
+const errorContainer = document.getElementById('error');
+const errorMessageEl = document.getElementById('error-msg');
 const Username = localStorage.getItem('User');
 
 let GameBtns = [];
@@ -119,6 +122,7 @@ const Startup = () => {
 
 OpenBoxEl.addEventListener('click', () => {
     if (GamecodePromptEl.style.display === "none") {
+        GamecodeInput.value = "";
         GamecodePromptEl.style.display = "block";
       } else {
         GamecodePromptEl.style.display = "none";
@@ -139,6 +143,42 @@ const btnClick = (socket) => {
         localStorage.setItem('gameCode', btn.value);
         window.location = 'gameLobby.html'
     }))
+}
+
+JoinByGameCodeBtn.addEventListener('mouseover', () => {
+    if (GamecodeInput.value.length == 6) {
+        JoinByGameCodeBtn.style.cursor = 'pointer';
+    }
+})
+
+JoinByGameCodeBtn.addEventListener('click', async (event) => {
+    if (GamecodeInput.value.length !== 6) {
+        event.preventDefault();
+    } else {
+        const response = await fetch("http://localhost:8080/joinByGameCode", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({"gameCode": GamecodeInput.value})
+        })
+        if (response.status === 200) {
+            localStorage.setItem('gameCode', GamecodeInput.value);
+            window.location = 'gameLobby.html'
+        } else {
+            const message = await response.json();
+            GamecodeInput.value = "";
+            errorAnimation(message.Response);
+        }
+    }
+})
+
+const errorAnimation = (errorMsg) => {
+    errorMessageEl.textContent = errorMsg;
+    errorContainer.style.display = "block";
+    errorContainer.style.animation = "down 1s ease-out";
+    setTimeout(() => {
+        errorContainer.style.animation = "up 3s ease-out";
+        setTimeout(() => { errorContainer.style.display = "none"; }, 2000)
+    }, 4000)
 }
 
 Startup()

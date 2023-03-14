@@ -8,8 +8,7 @@ app.use(express.json());
 
 //websocket setup
 const http = require('http');
-const { resolve } = require('path');
-const { rejects } = require('assert');
+const { copyFileSync } = require('fs');
 const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {
@@ -58,6 +57,20 @@ app.post('/createGame', (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(400).send("Not all requirements met.");
+  }
+})
+
+app.post('/joinByGameCode', (req, res) => {
+  const code = req.body.gameCode;
+  const game = findGame(code);
+  if (game !== undefined) {
+    if (game.players.length == game.maxPlayers) {
+      res.status(401).send({'Response': "Game is full"})
+    } else {
+      res.sendStatus(200);
+    }
+  } else {
+      res.status(404).send({'Response': "Game not found"})
   }
 })
 
@@ -114,7 +127,7 @@ io.on('connection', (client) => {
         if (player.SocketId === user) {
           const index = game.players.indexOf(user);
           game.players.splice(index, 1)
-
+          io.emit('successfullyJoined', ["ok", game]);
           if (game.host.SocketId === user) {
             io.to(game.gameCode).emit("GameClosed");
             const GamesIndex = Games.indexOf(game);
@@ -160,6 +173,8 @@ const findGame = (GameCode) => {
   Games.forEach(game => {
     if (game.gameCode == GameCode) {
       Game = game;
+    } else {
+      game = undefined;
     }
   })
   return Game;

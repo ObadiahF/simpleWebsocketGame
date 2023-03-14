@@ -11,10 +11,13 @@ usernameInput.value = "";
 
 const startUp = () => {
     const err = localStorage.getItem('error');
+    const Username = localStorage.getItem('User');
     if (err !== null) {
         errorAnimation(err)
     }
     localStorage.clear();
+    localStorage.setItem('User', Username)
+    usernameInput.value = Username;
 }
 
 
