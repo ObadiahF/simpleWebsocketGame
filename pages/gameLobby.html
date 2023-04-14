@@ -7,16 +7,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- These ones were also incorrect -->
     <link rel="stylesheet" href="../styles/gameLobby.css">
-    <script src="../js/gameLobby.js" defer></script>
-    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>    
+    <!--<script src="../js/gameLobby.js" defer></script> -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="https://kit.fontawesome.com/db3c0028dc.js" crossorigin="anonymous"></script>  
     <title>WebSocket | Game Lobby</title>
 </head>
 
 <body>
     <div class="ring">Joining
-        <span></span>
+        <span id="innerRing"></span>
       </div>
-    <div class="lobby">
+<div class="lobby">
     <div class="heading-container">
         <h1>Game Lobby</h1>
         <div class="seprate">
@@ -24,8 +25,7 @@
         </div>
     </div>
 
-    <div id="player-container">
-    </div>
+    <div id="player-container"></div>
 
     <div class="player-counter">
         <div class="heading-container">
@@ -36,6 +36,93 @@
         </div>
     </div>
 </div>
-</body>
 
+<div class="explantionScreen">
+    <div class="heading-container">
+        <h1>Game Starting...</h1>
+        <div class="seprate">
+            <h3>Answer each question correctly as quickly as possible. The player with the most points wins!</h3>
+        </div>     
+    </div>
+    
+    <div class="progress-bar__container"><div></div></div>
+</div>
+
+<div class="questions-containers">
+    <div class="heading-container">
+        <h1 class="title">WebSocket Math game</h1>
+        <div class="seprateX3">
+        </div>
+        <div class="seprate">
+            <h2 id="question">5 + 2 = ?</h2>
+        </div>
+    </div>
+
+    <div class="answers-container">
+        <div class="Answerbtn-container"><button class="answer">5</button></div>
+        <div class="Answerbtn-container"><button class="answer">6</button></div>
+        <div class="Answerbtn-container"><button class="answer">7</button></div>
+        <div class="Answerbtn-container"><button class="answer">9</button></div>
+    </div>
+</div>
+
+<div id="waitingScreen">
+    <main>
+          <div>
+            <h1 id="WaitingText">Speed Demon!</h1>
+          </div>
+    </main>
+    <footer>
+        <h1 id="UserName">User</h1>
+        <h1 id="points">450</h1>
+    </footer>
+</div>
+
+<div id="gradeScreen">
+    <main>
+        <div><i class="fa-solid fa-check"></i> <i class="fa-solid fa-x"></i></div>
+        <div><h1 id="QuestionOutput">Incorrect!</h1></div>
+        <div><h3 id="added-points">+ 450 Points</h3></div>
+    </main>
+    <footer>
+        <h1 id="UserName">User</h1>
+        <h1 id="points">450</h1>
+    </footer>
+</div>
+
+<div id="leaderboard">
+    <h1>Leaderboard</h1>
+    <div class="leaderboard-container">
+        <div class="Player-container">
+           <h2 id="UserName" class="Leaderboard-text UsernameText">User</h2>
+           <h2 id="UserPoints" class="Leaderboard-text">450</h2>
+        </div>
+
+        <div class="Player-container">
+            <h2 id="UserName" class="Leaderboard-text UsernameText">User</h2>
+            <h2 id="UserPoints" class="Leaderboard-text">450</h2>
+         </div>
+         <div class="Player-container">
+            <h2 id="UserName" class="Leaderboard-text UsernameText">User</h2>
+            <h2 id="UserPoints" class="Leaderboard-text">450</h2>
+         </div>
+         <div class="Player-container">
+            <h2 id="UserName" class="Leaderboard-text UsernameText">User</h2>
+            <h2 id="UserPoints" class="Leaderboard-text">450</h2>
+         </div>
+         <div class="Player-container">
+            <h2 id="UserName" class="Leaderboard-text UsernameText">User</h2>
+            <h2 id="UserPoints" class="Leaderboard-text">450</h2>
+         </div>
+    </div>
+
+    <button id="NextButton">Next Question</button>
+
+    <footer>
+        <h2>Question: <span id="whichQuestion">3</span>/<span id="NumofQuestions">20</span></h2>
+        <h2>Players: <span id="numOfPlayers">7</span></h2>
+    </footer>
+</div>
+
+</body>
 </html>

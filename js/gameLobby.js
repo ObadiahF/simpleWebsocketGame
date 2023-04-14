@@ -6,6 +6,11 @@ const Username = localStorage.getItem('User');
 const gameCode = localStorage.getItem('gameCode');
 const loadingEl = document.querySelector('.ring');
 const LobbyEl = document.querySelector('.lobby')
+const explantionScreenEl = document.querySelector('.explantionScreen');
+const questionsScreenEL = document.querySelector('.questions-containers');
+const questionEL = document.getElementById('question');
+const answerBtns = document.querySelectorAll('.answer')
+
 let players = [];
 const socket = io('http://localhost:3000');
 
@@ -23,9 +28,34 @@ socket.on("connect", () => {
         }
         if (args[1].host.SocketId === socket.id) startBtn.style.display = 'block';
         playerJoin(args[1])
+
+        startBtn.addEventListener('click', (event) => {
+            if (players.length < 2) {
+                event.preventDefault();
+            } else {
+                if (args[1].host.SocketId === socket.id) {
+                    socket.emit('GameStarting', gameCode);
+                    startBtn.style.backgroundColor = 'grey';
+                    startBtn.style.cursor = 'not-allowed';
+                    startBtn.classList.remove('startActive')
+                } else {
+                    event.preventDefault();
+                }
+            }
+        })
     })
 
+    socket.on('Questions', (questions) => {
+        LobbyEl.style.display = 'none';
+        explantionScreenEl.style.display = 'block';
+        setTimeout(() => {
+            explantionScreenEl.style.display = 'none';
+            questionsScreenEL.style.display = 'block';
+            gameStart(questions, 0);
+        }, 20000)
+    })
     
+
 });
 
 
@@ -37,8 +67,8 @@ socket.on('connect_error', () => {
 
 
 socket.on("disconnect", () => {
-    localStorage.setItem('error', "Failed to connect to server.")
-    window.location = '../index.html'
+    localStorage.setItem('error', "Connection failed.")
+    //window.location = '../index.html'
 });
 
 const startUp = () => {
@@ -119,8 +149,34 @@ const playerJoin = (Game) => {
         }
 }
 
-startBtn.addEventListener('click', () => {
-    
+const gameStart = (questions, whichQuestion) => {
+    generateQuestion(questions, whichQuestion);
+}
+
+const generateQuestion = (questions, index) => {
+    let i = 0;
+    questionEL.textContent = questions[index].equation;
+    const correctAnswerIndex = Math.floor(Math.random() * 4);
+    answerBtns.forEach(btn => {
+        if (i == correctAnswerIndex) {
+            btn.textContent = questions[index].answer;
+        } else {
+            let randomNum = Math.floor(Math.random() * 10);
+            while (randomNum === questions[index].answer) {
+                randomNum = Math.floor(Math.random() * 10);
+            }
+            btn.textContent = randomNum;
+        }
+        i++
+
+        // question answering
+        btn.addEventListener('click', () => {
+            const answer = btn.textContent;
+            socket.emit('answeredQuestion', [gameCode,Date.now(), answer, index]);
+            index++
+            generateQuestion(questions, index);
+        }) 
 })
+}
 
 startUp();

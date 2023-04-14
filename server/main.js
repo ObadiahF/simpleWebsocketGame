@@ -2,13 +2,16 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const port = 8080
-const util = require('util')
+const util = require('util');
+const generateQuestion = require('./questions.js');
 app.use(cors('*'));
 app.use(express.json());
+
 
 //websocket setup
 const http = require('http');
 const { copyFileSync } = require('fs');
+const { time } = require('console');
 const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {
@@ -78,7 +81,7 @@ app.post('/joinByGameCode', (req, res) => {
 
 
 io.on('connection', (client) => {
-  console.log('New websocket connection');
+  //console.log('New websocket connection');
   let publicGames = [];
   Games.forEach(game => {
     if (game.privacy !== "Private") {
@@ -95,7 +98,8 @@ io.on('connection', (client) => {
   client.on('JoinGame', (User, Gamecode) => {
     const Player = {
       "Username": User,
-      "SocketId": client.id
+      "SocketId": client.id,
+      "Questions": []
     }
     const game = GamesIndex.indexOf(Gamecode.toString())
     let host;
@@ -112,8 +116,6 @@ io.on('connection', (client) => {
      io.emit("newGame", Games[game]);
      publicGames.push(Games[game]);
     } 
-
-
     client.to(Gamecode);
     io.emit('successfullyJoined', ["ok", Games[game]])
     }
@@ -154,18 +156,50 @@ io.on('connection', (client) => {
 
   })
 
+  client.on("GameStarting", (gameCode) => {
+    const Game = findGame(gameCode);
+    if (Game === undefined) return;
+
+    Game.status = "Playing";
+    const questions = generateQuestion(Game.gameMode, 5);
+    Game.questions = questions;
+    io.emit('Questions', questions);
+  })
   
+
+  client.on('answeredQuestion', (args) => {
+    const gameCode = args[0];
+    const timeStamp = args[1];
+    const Game = findGame(gameCode);
+    const answer = args[2];
+    const whichQuestion = args[3];
+    const Player = findPlayer(client.id, gameCode);
+
+    let CorrectAnswer
+    if (answer == Game.questions[whichQuestion].answer)  {
+      CorrectAnswer = true;
+    } else {
+      CorrectAnswer = false;
+    }
+    Player.Questions.push({
+      "CorrectAnswer": CorrectAnswer,
+      "TimeStamp": timeStamp
+    })
+  
+  })
+
 });
+
 
 const findPlayer = (playerArg, GameCode) => {
   const Game = findGame(GameCode);
-  let kickedPlayer;
+  let Player;
   Game.players.forEach(player => {
     if (player.SocketId === playerArg) {
-      kickedPlayer = player;
+      Player = player;
     }
   })
-  return kickedPlayer;
+  return Player;
 }
 
 const findGame = (GameCode) => {

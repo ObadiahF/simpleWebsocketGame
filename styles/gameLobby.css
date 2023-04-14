@@ -17,8 +17,9 @@ body {
     display: none;
 }
 
-.ring
-{
+.ring {
+  display: block;
+
   position:absolute;
   top:50%;
   left:50%;
@@ -38,6 +39,9 @@ body {
   text-shadow:0 0 10px #fff000;
   box-shadow:0 0 20px rgba(0,0,0,.5);
 }
+
+
+
 .ring:before
 {
   content:'';
@@ -52,7 +56,7 @@ body {
   border-radius:50%;
   animation:animateC 2s linear infinite;
 }
-span
+#innerRing
 {
   display:block;
   position:absolute;
@@ -64,7 +68,7 @@ span
   transform-origin:left;
   animation:animate 2s linear infinite;
 }
-span:before
+#innerRing:before
 {
   content:'';
   position:absolute;
@@ -198,4 +202,263 @@ span:before
 .host {
     color: gold;
     cursor: default;
+}
+
+.explantionScreen {
+  display: none;
+}
+
+.progress-bar__container {
+  border: 2px solid black;
+  height: 2rem;
+  margin: 0 auto;
+  margin: 5rem;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.progress-bar__container div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #415a77;
+  border-radius: 15px;
+  animation:moveLine 20s linear;
+
+}
+
+@keyframes moveLine
+{
+  0%
+  {
+    width: 2%;
+  }
+  100%
+  {
+    width: 100%;
+  }
+}
+
+.questions-containers {
+  /* set to grid */
+  display: none;
+}
+
+.title {
+  background-color: #415a77;
+  border-radius: 8px;
+  padding: 0.5rem;
+}
+
+.seprateX3 {
+  margin-top: 3rem;
+}
+
+#question {
+  font-size: 6rem;
+  margin-bottom: 3rem;
+}
+
+.answers-container {
+  width: 80%;
+  height: 40vh;
+  border: 2px solid white;
+  border-radius: 8px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  
+}
+
+.Answerbtn-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid white;
+  position: relative;
+}
+
+.answer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #415a77;
+  color: white;
+  font-size: 32px;
+  border: none;
+  transition: 300ms ease;
+  cursor: pointer;
+}
+
+.answer:hover {
+  background-color: #6588af;
+}
+
+
+#waitingScreen, #gradeScreen {
+  /* make it grid */
+  display: none;
+  min-height: 100vh;
+  grid-template-rows: 90% 10%;
+}
+
+#gradeScreen {
+}
+
+
+
+#waitingScreen {
+  /* set to grid */
+  display: none;
+}
+
+#waitingScreen main, #gradeScreen main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  font-size: 32px;
+}
+
+#gradeScreen main {
+  flex-direction: column;
+}
+
+.fa-check, .fa-x {
+  font-size: 10rem;
+}
+
+.fa-check {
+  display: none;
+}
+
+.fa-x {
+  
+}
+
+#added-points {
+  margin-top: 2rem;
+}
+
+#waitingScreen footer, #gradeScreen footer {
+  background-color: black;
+  display: flex;
+  padding: 1rem;
+  justify-content: space-between;
+}
+
+#waitingScreen footer h1, #gradeScreen footer h1 {
+  z-index: 3;
+  color: white;
+}
+
+#leaderboard {
+  min-height: 100vh;
+  color: white;
+}
+
+#leaderboard h1 {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 3.5rem;
+}
+
+.leaderboard-container {
+  background-color: #415a77;
+  margin: 2rem auto;
+  width: 70%;
+  /*min-height: 60vh; */
+  border-radius: 12px;
+  padding: 0.5rem;
+  align-items: center;
+  flex-direction: column;
+}
+
+.Player-container {
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  height: 3rem;
+  width: 100%;
+  background-color: #0d1b2a;
+  z-index: 3;
+  justify-content: space-between;
+  border-radius: 8px;
+  padding: 2rem;
+  margin-top: 0.5rem;
+}
+
+.UsernameText {
+  padding-left: 2rem;
+  position: relative;
+}
+
+.Leaderboard-text {
+  font-size: 2rem;
+}
+
+.UsernameText::before {
+  content: "1";
+  position: absolute;
+  left: -1.5rem;
+  color: yellow;
+  font-size: 3rem;
+  font-weight: bold;
+  top: -25%;
+}
+
+#leaderboard {
+  /* Set to flex*/
+  display: none;
+  flex-direction: column;
+}
+
+#leaderboard footer{
+  min-height: 10vh;
+  width: 100%;
+  background-color: black;
+  padding: 1rem;
+  color: white;
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+#NextButton {
+  width: 10%;
+  min-height: 5vh;
+  font-size: 1rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  background-color: #e0e1dd;
+  color: black;
+  border: 2px solid black;
+  cursor: pointer;
+  top: 1rem;
+  right: 1rem;
+  position: absolute
+}
+
+#NextButton:hover {
+  transition: 300ms ease;
+  background-color: grey;
+}
+
+@media screen and (max-width: 992px) {
+  #NextButton {
+    position: relative;
+    margin: 0 auto;
+    margin-bottom: 2rem;
+    width: 60%;
+    min-height: 10vh;
+    font-size: 2rem;
+  }
 }
