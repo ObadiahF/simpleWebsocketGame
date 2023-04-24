@@ -12,6 +12,7 @@ app.use(express.json());
 const http = require('http');
 const { copyFileSync } = require('fs');
 const { time } = require('console');
+const { response } = require('express');
 const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {
@@ -52,7 +53,8 @@ app.post('/createGame', (req, res) => {
       host,
       players,
       gameCode,
-      status
+      status,
+      "whoAnswered": []
     }
     Games.push(Game);
     GamesIndex.push(gameCode);
@@ -99,7 +101,8 @@ io.on('connection', (client) => {
     const Player = {
       "Username": User,
       "SocketId": client.id,
-      "Questions": []
+      "Questions": [],
+      "Points": 0
     }
     const game = GamesIndex.indexOf(Gamecode.toString())
     let host;
@@ -173,22 +176,71 @@ io.on('connection', (client) => {
     const Game = findGame(gameCode);
     const answer = args[2];
     const whichQuestion = args[3];
-    const Player = findPlayer(client.id, gameCode);
-
+    const player = findPlayer(client.id, gameCode);
     let CorrectAnswer
     if (answer == Game.questions[whichQuestion].answer)  {
       CorrectAnswer = true;
     } else {
       CorrectAnswer = false;
     }
-    Player.Questions.push({
+    
+    player.Questions.push({
       "CorrectAnswer": CorrectAnswer,
       "TimeStamp": timeStamp
-    })
-  
   })
+  Game.whoAnswered.push({
+    "CorrectAnswer": CorrectAnswer,
+    "TimeStamp": timeStamp,
+    "user": player.SocketId
+
+})  
+  WhoAnsweredFirst(player, Game, whichQuestion, io);
+});
+
+client.on('getPoints', (gameCode) => {
+  const player = findPlayer(client.id, gameCode);
+  io.to(client.id).emit('points', player.Points)
+})
 
 });
+
+const WhoAnsweredFirst = (player, game, whichQuestion, io) => {
+  const list = game.whoAnswered;
+
+  if (list.length === game.players.length) {
+    //sort based off of least number and then do event
+    list.forEach(p => {
+      if (p.CorrectAnswer === false) {
+
+        let Player;
+        game.players.forEach(player => {
+          if (player.SocketId === p.user) {
+            Player = player;
+          }
+        })
+
+        io.to(p.user).emit('results', [false, 0, Player.Points]);
+        list.splice(list.indexOf(p), 1)
+      }
+    })
+    Awardpoints(io, list, whichQuestion, game)
+    list.length = 0;
+  }
+   //list.push(player);
+}
+
+const Awardpoints = (io, list, whichQuestion, game) => {
+  const StarterPoints = 500;
+  let points = StarterPoints;
+  list.sort((a, b) => a.TimeStamp - b.TimeStamp);
+  list.forEach(response => {
+    const player = list[list.indexOf(response)].user
+    points = points + 100;
+    const playerObject = findPlayer(player, game.gameCode)
+    playerObject.Points =+ points
+    io.to(player).emit('results', [true, points, playerObject.Points]);
+  })
+}
 
 
 const findPlayer = (playerArg, GameCode) => {
@@ -217,4 +269,4 @@ const findGame = (GameCode) => {
 
 server.listen(3000, () => {
   console.log('websocket port: 3000');
-});
+})

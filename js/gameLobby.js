@@ -10,6 +10,15 @@ const explantionScreenEl = document.querySelector('.explantionScreen');
 const questionsScreenEL = document.querySelector('.questions-containers');
 const questionEL = document.getElementById('question');
 const answerBtns = document.querySelectorAll('.answer')
+const WaitingScreenEL = document.getElementById('waitingScreen');
+const WaitingScreenPointsEl = document.getElementById('points');
+const WaitingScreenELUserNameEl = document.getElementById('UserName');
+const gradeScreen = document.getElementById('gradeScreen');
+const QuestionOutput = document.getElementById('QuestionOutput');
+const addedPointsEl = document.getElementById('added-points');
+const correctSymbolEl = document.querySelector('.fa-check');
+const incorrectSymbolEL = document.querySelector('.fa-x');
+
 
 let players = [];
 const socket = io('http://localhost:3000');
@@ -55,6 +64,12 @@ socket.on("connect", () => {
         }, 20000)
     })
     
+    socket.on('results', (args) => {
+        const result = args[0];
+        const addedPoints = args[1];
+        const currentPoints = args[2];
+        showResultsPage(result, addedPoints, currentPoints);
+    })
 
 });
 
@@ -64,11 +79,21 @@ socket.on('connect_error', () => {
     window.location = '../index.html'
 })
 
+const getCurrentPoints = async () => {
+    return new Promise((resolve, reject) => {
+      socket.emit('getPoints', gameCode);
+  
+      socket.on('points', (arg) => {
+        resolve(arg);
+      });
+    });
+  };
+  
 
 
 socket.on("disconnect", () => {
     localStorage.setItem('error', "Connection failed.")
-    //window.location = '../index.html'
+    window.location = '../index.html'
 });
 
 const startUp = () => {
@@ -157,8 +182,9 @@ const generateQuestion = (questions, index) => {
     let i = 0;
     questionEL.textContent = questions[index].equation;
     const correctAnswerIndex = Math.floor(Math.random() * 4);
-    answerBtns.forEach(btn => {
-        if (i == correctAnswerIndex) {
+    answerBtns.forEach((btn, idx) => {
+        btn.classList.remove('handled');
+        if (idx == correctAnswerIndex) {
             btn.textContent = questions[index].answer;
         } else {
             let randomNum = Math.floor(Math.random() * 10);
@@ -167,16 +193,56 @@ const generateQuestion = (questions, index) => {
             }
             btn.textContent = randomNum;
         }
-        i++
-
-        // question answering
-        btn.addEventListener('click', () => {
+    });
+    
+    // answer button event listener
+    answerBtns.forEach((btn) => {
+        btn.addEventListener('click', (event) => {
+            //I added this because for some reason this event fires twice
+            if (event.target.classList.contains('handled')) {
+                return;
+            }
+            event.target.classList.add('handled');
             const answer = btn.textContent;
-            socket.emit('answeredQuestion', [gameCode,Date.now(), answer, index]);
+            socket.emit('answeredQuestion', [gameCode, Date.now(), answer, index]);
             index++
-            generateQuestion(questions, index);
+            showWaitingScreen();
+            //generateQuestion(questions, index);
         }) 
-})
+    });
+};
+
+
+const showWaitingScreen = () => {
+    
+    questionsScreenEL.style.display = 'none';
+    WaitingScreenEL.style.display = 'grid';
+    getCurrentPoints().then((points) => WaitingScreenPointsEl.textContent = points);
+    WaitingScreenELUserNameEl.textContent = Username;
+    
 }
+
+const showResultsPage = (result, addedPoints, currentPoints) => {
+    WaitingScreenEL.style.display = 'none';
+    gradeScreen.style.display = 'grid';
+
+    WaitingScreenELUserNameEl.textContent = Username;
+    WaitingScreenPointsEl.textContent = currentPoints;
+
+    if (result === true) {
+        QuestionOutput.textContent = 'Correct!';
+        correctSymbolEl.style.display = 'block'
+        incorrectSymbolEL.style.display = 'none';
+    } else {
+        QuestionOutput.textContent = 'Incorrect!';
+        correctSymbolEl.style.display = 'none'
+        incorrectSymbolEL.style.display = 'block';
+    }
+
+    addedPointsEl.textContent = addedPoints;
+    document.getElementById('UserNameFooter').textContent = Username;
+    document.getElementById('pointsFooter').textContent = currentPoints;
+}
+
 
 startUp();
