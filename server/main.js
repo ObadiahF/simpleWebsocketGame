@@ -226,20 +226,22 @@ const WhoAnsweredFirst = (player, game, whichQuestion, io) => {
     Awardpoints(io, list, whichQuestion, game)
     list.length = 0;
   }
-   //list.push(player);
 }
 
 const Awardpoints = (io, list, whichQuestion, game) => {
   const StarterPoints = 500;
   let points = StarterPoints;
-  list.sort((a, b) => a.TimeStamp - b.TimeStamp);
+  list.sort((a, b) => b.TimeStamp - a.TimeStamp);
   list.forEach(response => {
     const player = list[list.indexOf(response)].user
     points = points + 100;
     const playerObject = findPlayer(player, game.gameCode)
     playerObject.Points =+ points
     io.to(player).emit('results', [true, points, playerObject.Points]);
-  })
+  });
+  setTimeout(() => {
+    io.emit("ShowLeaderBoard", [game.players, whichQuestion, game.host]);
+  }, 5000)
 }
 
 

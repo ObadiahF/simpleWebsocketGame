@@ -18,7 +18,13 @@ const QuestionOutput = document.getElementById('QuestionOutput');
 const addedPointsEl = document.getElementById('added-points');
 const correctSymbolEl = document.querySelector('.fa-check');
 const incorrectSymbolEL = document.querySelector('.fa-x');
-
+//leaderboard els
+const leaderBoardDiv = document.getElementById('leaderboard');
+const whichQuestionEl = document.getElementById('whichQuestion');
+const numOfQuestions = document.getElementById('NumofQuestions');
+const NextQuestionBtn = document.getElementById('NextButton');
+const leaderboardContainer = document.querySelector('.leaderboard-container');
+const numOfPlayersEl = document.getElementById('numOfPlayers');
 
 let players = [];
 const socket = io('http://localhost:3000');
@@ -69,6 +75,13 @@ socket.on("connect", () => {
         const addedPoints = args[1];
         const currentPoints = args[2];
         showResultsPage(result, addedPoints, currentPoints);
+    })
+
+    socket.on("ShowLeaderBoard", (args) => {
+        const playerData = args[0];
+        const whichQuestion = args[1];
+        const host = args[2];
+        ShowLeaderBoard(playerData, whichQuestion, host);
     })
 
 });
@@ -244,5 +257,31 @@ const showResultsPage = (result, addedPoints, currentPoints) => {
     document.getElementById('pointsFooter').textContent = currentPoints;
 }
 
+const ShowLeaderBoard = (playerData, whichQuestion, host) => {
+    gradeScreen.style.display = 'none';
+    leaderBoardDiv.style.display = 'flex';
+
+    whichQuestionEl.textContent = whichQuestion + 1;
+    numOfQuestions.textContent = 20;
+    numOfPlayersEl.textContent = playerData.length;
+
+    if (host.SocketId !== socket.id) {
+        NextQuestionBtn.style.display = 'none';
+    }
+    playerData.sort((a, b) => b.Points - a.Points);
+    if (playerData.length > 5) playerData.length = 5;
+    //generate userData for Users
+    playerData.forEach(player => {
+        const playerContainer = document.createElement('div');
+        playerContainer.classList.add('Player-container');
+        playerContainer.innerHTML = `
+        <h2 class="Leaderboard-text UsernameText" place="${playerData.indexOf(player) + 1}">${player.Username}</h2>
+        <h2 class="Leaderboard-text">${player.Points}</h2>
+        `
+        leaderboardContainer.appendChild(playerContainer);
+
+
+    })
+}
 
 startUp();

@@ -406,7 +406,7 @@ body {
 }
 
 .UsernameText::before {
-  content: "1";
+  content: attr(place);
   position: absolute;
   left: -1.5rem;
   color: yellow;
