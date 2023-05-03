@@ -18,6 +18,7 @@ const QuestionOutput = document.getElementById('QuestionOutput');
 const addedPointsEl = document.getElementById('added-points');
 const correctSymbolEl = document.querySelector('.fa-check');
 const incorrectSymbolEL = document.querySelector('.fa-x');
+const lobbyLeaveBtn = document.getElementById('lobbyLeave');
 //leaderboard els
 const leaderBoardDiv = document.getElementById('leaderboard');
 const whichQuestionEl = document.getElementById('whichQuestion');
@@ -25,9 +26,13 @@ const numOfQuestions = document.getElementById('NumofQuestions');
 const NextQuestionBtn = document.getElementById('NextButton');
 const leaderboardContainer = document.querySelector('.leaderboard-container');
 const numOfPlayersEl = document.getElementById('numOfPlayers');
+const endOfGameBtns = document.getElementById('EndGame');
+const lobbyBtn = document.getElementById('Lobby');
+const leaveBtn = document.getElementById('Leave');
 
 let players = [];
 const socket = io('http://localhost:3000');
+let questionsList = [];
 
 socket.on("connect", () => {
     socket.emit('JoinGame', Username, gameCode)
@@ -39,7 +44,7 @@ socket.on("connect", () => {
                 LobbyEl.style.display = "block";
             }, 1000)
         } else {
-            window.location = '/index.html'
+            goToHome();
         }
         if (args[1].host.SocketId === socket.id) startBtn.style.display = 'block';
         playerJoin(args[1])
@@ -66,6 +71,7 @@ socket.on("connect", () => {
         setTimeout(() => {
             explantionScreenEl.style.display = 'none';
             questionsScreenEL.style.display = 'block';
+            questionsList = questions;
             gameStart(questions, 0);
         }, 20000)
     })
@@ -84,12 +90,27 @@ socket.on("connect", () => {
         ShowLeaderBoard(playerData, whichQuestion, host);
     })
 
+
+    socket.on('nextQuestion!', (whichQuestion) => {
+            leaderBoardDiv.style.display = 'none';
+            questionsScreenEL.style.display = 'block';
+            generateQuestion(questionsList, whichQuestion);
+            //delete the previous scoreboard
+            while (leaderboardContainer.firstChild) {
+                leaderboardContainer.removeChild(leaderboardContainer.firstChild);
+              }
+    })
+
+    socket.on('GameOver', () => {
+        NextQuestionBtn.style.display = 'none';
+        endOfGameBtns.style.display = 'flex';
+    })
 });
 
 
 socket.on('connect_error', () => {
     localStorage.setItem('error', "Failed to connect to server.")
-    window.location = '../index.html'
+    goToHome();
 })
 
 const getCurrentPoints = async () => {
@@ -106,12 +127,12 @@ const getCurrentPoints = async () => {
 
 socket.on("disconnect", () => {
     localStorage.setItem('error', "Connection failed.")
-    window.location = '../index.html'
+    goToHome();
 });
 
 const startUp = () => {
     if (!(gameCode) || !(localStorage.getItem('User'))) {
-        window.location = "../index.html";
+        goToHome()
     } else {
         //setup Gamecode
         gameCodeEl.textContent = `Game Code: ${gameCode}`
@@ -192,7 +213,6 @@ const gameStart = (questions, whichQuestion) => {
 }
 
 const generateQuestion = (questions, index) => {
-    let i = 0;
     questionEL.textContent = questions[index].equation;
     const correctAnswerIndex = Math.floor(Math.random() * 4);
     answerBtns.forEach((btn, idx) => {
@@ -220,9 +240,10 @@ const generateQuestion = (questions, index) => {
             socket.emit('answeredQuestion', [gameCode, Date.now(), answer, index]);
             index++
             showWaitingScreen();
-            //generateQuestion(questions, index);
         }) 
     });
+
+
 };
 
 
@@ -270,7 +291,8 @@ const ShowLeaderBoard = (playerData, whichQuestion, host) => {
     }
     playerData.sort((a, b) => b.Points - a.Points);
     if (playerData.length > 5) playerData.length = 5;
-    //generate userData for Users
+
+    //generate leaderboard showcasing the user data
     playerData.forEach(player => {
         const playerContainer = document.createElement('div');
         playerContainer.classList.add('Player-container');
@@ -279,9 +301,31 @@ const ShowLeaderBoard = (playerData, whichQuestion, host) => {
         <h2 class="Leaderboard-text">${player.Points}</h2>
         `
         leaderboardContainer.appendChild(playerContainer);
-
-
+        
+        NextQuestionBtn.addEventListener('click', () => {
+            if (host.SocketId !== socket.id) return
+            socket.emit('nextQuestion', ([gameCode, whichQuestion++]));
+        })
     })
+
+    leaveBtn.addEventListener('click', () => {
+        goToHome()
+    })
+
+    lobbyBtn.addEventListener('click', () => {
+        leaderBoardDiv.style.display = 'none';
+        LobbyEl.style.display = 'block';
+    })
+
+}
+
+lobbyLeaveBtn.addEventListener('click', () => {
+    goToHome();
+})
+
+const goToHome = () => {
+    window.location = '../index.html'
+
 }
 
 startUp();

@@ -32,7 +32,8 @@
             <h1 id="player">1/4</h1>
         </div>
         <div class="btn-container">
-            <button id="start">Start</button>
+            <button id="start" class="lobbybtns">Start</button>
+            <button id="lobbyLeave" class="lobbybtns">Leave</button>
         </div>
     </div>
 </div>
@@ -96,8 +97,11 @@
         
     </div>
 
-    <button id="NextButton">Next Question</button>
-
+    <button id="NextButton" class="Leaderboard-btns">Next Question</button>
+    <div id="EndGame">
+        <button id="Lobby" class="Leaderboard-btns">Game Lobby</button>
+        <button id="Leave" class="Leaderboard-btns">Leave Game</button>
+    </div>
     <footer>
         <h2>Question: <span id="whichQuestion">3</span>/<span id="NumofQuestions">20</span></h2>
         <h2>Players: <span id="numOfPlayers">7</span></h2>

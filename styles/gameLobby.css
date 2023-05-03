@@ -181,17 +181,31 @@ body {
     width: 100%;
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-container > button {
+  margin: 0.5rem;
+}
+
+
+.lobbybtns {
+  background-color: #e0e1dd;
+  border: 2px solid black;
+  padding: 1.5rem 6rem;
+  font-size: 2rem;
+  color: black;
+  border-radius: 8px;
 }
 
 #start {
-    background-color: grey;
-    border: 2px solid black;
-    padding: 1.5rem 6rem;
-    font-size: 2rem;
-    color: black;
-    border-radius: 8px;
     cursor: not-allowed;
     display: none;
+    background-color: grey;
+}
+.lobbybtns:hover {
+  transition: 300ms ease;
+  background-color: darkgrey;
 }
 
 .startActive:hover {
@@ -432,24 +446,35 @@ body {
   justify-content: space-between;
 }
 
-#NextButton {
-  width: 10%;
+#EndGame {
+  min-height: 20vh;
+  width: 100%;
+  display: none;
+  flex-direction: column;
+}
+
+.Leaderboard-btns {
+  width: 50%;
   min-height: 5vh;
-  font-size: 1rem;
+  font-size: 2rem;
   padding: 0.5rem;
   border-radius: 8px;
   background-color: #e0e1dd;
   color: black;
   border: 2px solid black;
   cursor: pointer;
+  margin: 0.5rem auto;
+}
+
+.Leaderboard-btns:hover {
+  transition: 300ms ease;
+  background-color: grey;
+}
+
+#NextButton {
   top: 1rem;
   right: 1rem;
   position: absolute
-}
-
-#NextButton:hover {
-  transition: 300ms ease;
-  background-color: grey;
 }
 
 @media screen and (max-width: 992px) {

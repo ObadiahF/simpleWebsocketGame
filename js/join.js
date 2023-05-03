@@ -95,6 +95,9 @@ const Startup = () => {
                     
                 }
             })
+            if (GameBtns.length === 1) {
+                ErrorMsg('No public games available!')
+            }            
         })
 
         socket.on('PlayersChanged', (game) => {

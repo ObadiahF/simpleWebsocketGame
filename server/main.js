@@ -202,6 +202,15 @@ client.on('getPoints', (gameCode) => {
   io.to(client.id).emit('points', player.Points)
 })
 
+client.on('nextQuestion', (args) => {
+  const gameCode = args[0];
+  const whichQuestion = args[1];
+
+  const game = findGame(gameCode);
+
+    io.emit('nextQuestion!', (whichQuestion));
+})
+
 });
 
 const WhoAnsweredFirst = (player, game, whichQuestion, io) => {
@@ -236,11 +245,16 @@ const Awardpoints = (io, list, whichQuestion, game) => {
     const player = list[list.indexOf(response)].user
     points = points + 100;
     const playerObject = findPlayer(player, game.gameCode)
-    playerObject.Points =+ points
+    playerObject.Points += points
     io.to(player).emit('results', [true, points, playerObject.Points]);
   });
+  
+
   setTimeout(() => {
     io.emit("ShowLeaderBoard", [game.players, whichQuestion, game.host]);
+    if (game.questions.length <= whichQuestion + 1) {
+      io.emit('GameOver');
+    }
   }, 5000)
 }
 
