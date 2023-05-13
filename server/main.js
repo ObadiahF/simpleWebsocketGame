@@ -182,8 +182,7 @@ io.on('connection', (client) => {
       CorrectAnswer = true;
     } else {
       CorrectAnswer = false;
-    }
-    
+    }    
     player.Questions.push({
       "CorrectAnswer": CorrectAnswer,
       "TimeStamp": timeStamp
@@ -194,6 +193,7 @@ io.on('connection', (client) => {
     "user": player.SocketId
 
 })  
+
   WhoAnsweredFirst(player, Game, whichQuestion, io);
 });
 
@@ -215,7 +215,7 @@ client.on('nextQuestion', (args) => {
 
 const WhoAnsweredFirst = (player, game, whichQuestion, io) => {
   const list = game.whoAnswered;
-
+  const peopleWhoAnsweredCorrectly = [...game.whoAnswered];
   if (list.length === game.players.length) {
     //sort based off of least number and then do event
     list.forEach(p => {
@@ -229,10 +229,11 @@ const WhoAnsweredFirst = (player, game, whichQuestion, io) => {
         })
 
         io.to(p.user).emit('results', [false, 0, Player.Points]);
-        list.splice(list.indexOf(p), 1)
+        peopleWhoAnsweredCorrectly.splice(peopleWhoAnsweredCorrectly.indexOf(p), 1)
       }
     })
-    Awardpoints(io, list, whichQuestion, game)
+    console.log(peopleWhoAnsweredCorrectly);
+    Awardpoints(io, peopleWhoAnsweredCorrectly, whichQuestion, game)
     list.length = 0;
   }
 }
