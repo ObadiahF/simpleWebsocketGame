@@ -232,7 +232,6 @@ const WhoAnsweredFirst = (player, game, whichQuestion, io) => {
         peopleWhoAnsweredCorrectly.splice(peopleWhoAnsweredCorrectly.indexOf(p), 1)
       }
     })
-    console.log(peopleWhoAnsweredCorrectly);
     Awardpoints(io, peopleWhoAnsweredCorrectly, whichQuestion, game)
     list.length = 0;
   }

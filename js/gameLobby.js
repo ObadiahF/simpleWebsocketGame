@@ -102,6 +102,7 @@ socket.on("connect", () => {
     })
 
     socket.on('GameOver', () => {
+        document.querySelector('#leaderboard h1').textContent = "Final Results"
         NextQuestionBtn.style.display = 'none';
         endOfGameBtns.style.display = 'flex';
     })
@@ -214,19 +215,24 @@ const gameStart = (questions, whichQuestion) => {
 
 const generateQuestion = (questions, index) => {
     questionEL.textContent = questions[index].equation;
-    const correctAnswerIndex = Math.floor(Math.random() * 4);
-    answerBtns.forEach((btn, idx) => {
-        btn.classList.remove('handled');
-        if (idx == correctAnswerIndex) {
-            btn.textContent = questions[index].answer;
-        } else {
-            let randomNum = Math.floor(Math.random() * 10);
-            while (randomNum === questions[index].answer) {
-                randomNum = Math.floor(Math.random() * 10);
-            }
-            btn.textContent = randomNum;
-        }
-    });
+  const correctAnswerIndex = Math.floor(Math.random() * 4);
+  const usedNumbers = []; // Array to store unique random numbers
+
+  answerBtns.forEach((btn, idx) => {
+    btn.classList.remove('handled');
+
+    let randomNum;
+    if (idx === correctAnswerIndex) {
+      randomNum = questions[index].answer;
+    } else {
+      do {
+        randomNum = Math.floor(Math.random() * 10);
+      } while (usedNumbers.includes(randomNum) || randomNum === questions[index].answer);
+    }
+
+    usedNumbers.push(randomNum); // Add unique random number to the array
+    btn.textContent = randomNum;
+  });
     
     // answer button event listener
     answerBtns.forEach((btn) => {
