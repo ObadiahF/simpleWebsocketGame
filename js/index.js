@@ -49,6 +49,7 @@ const errorAnimation = (errorMsg) => {
     errorMessageEl.textContent = errorMsg;
     errorContainer.style.display = "block";
     errorContainer.style.animation = "down 1s ease-out";
+    setTimeout(() => errorContainer.scrollIntoView({ behavior: 'smooth' }), 500);
     setTimeout(() => {
         errorContainer.style.animation = "up 3s ease-out";
         setTimeout(() => { errorContainer.style.display = "none"; }, 2000)

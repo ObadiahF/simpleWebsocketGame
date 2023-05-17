@@ -51,7 +51,7 @@ createGameBtn.addEventListener('click', () => {
             "players": [],
             "status": "lobby"
         }
-
+        
         requestToCreateNewGame(gameSettings);
     }
 })
@@ -60,7 +60,7 @@ const errorAnimation = (errorMsg) => {
     errorMessageEl.textContent = errorMsg;
     errorContainer.style.display = "block";
     errorContainer.style.animation = "down 1s ease-out";
-
+    setTimeout(() => errorContainer.scrollIntoView({ behavior: 'smooth' }), 500);
     gameModeBtn.forEach(btn => btn.classList.remove('clicked'));
     howManyPlayersBtn.forEach(btn => btn.classList.remove('clicked'));
     privacyBtn.forEach(btn => btn.classList.remove('clicked'));
@@ -81,7 +81,7 @@ const requestToCreateNewGame = async (gameSettings) => {
         body: JSON.stringify(gameSettings)
     };
 
-    const response = await fetch("http://localhost:8080/createGame", requestOptions)
+    const response = await fetch("http://localhost:8080/createGame", requestOptions).catch(() => {errorAnimation('Error connecting to server')})
     if (response.status !== 200) {
         errorAnimation('Error connecting to server')
     } else {

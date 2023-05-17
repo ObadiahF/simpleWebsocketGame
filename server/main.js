@@ -104,13 +104,17 @@ io.on('connection', (client) => {
       "Questions": [],
       "Points": 0
     }
-    const game = GamesIndex.indexOf(Gamecode.toString())
+    const game = GamesIndex.indexOf(Gamecode.toString());
+    
     let host;
     //check if game is full or if player name is already in use
-    if (Games[game].players.length === 0) {
-      Games[game].host = Player;     
-    }
-
+    try {
+      if (Games[game].players.length === 0) {
+        Games[game].host = Player;
+      }
+  } catch {
+    Games.splice(Games.indexOf(Games[game], 1))
+  }
     if (Games[game].players.length == Games[game].maxPlayers) {
       client.emit('successfullyJoined', ["Game is full"])
     } else {
@@ -135,10 +139,11 @@ io.on('connection', (client) => {
           io.emit('successfullyJoined', ["ok", game]);
           if (game.host.SocketId === user) {
             io.to(game.gameCode).emit("GameClosed");
-            const GamesIndex = Games.indexOf(game);
-            io.emit("GameDeleted", (Games[GamesIndex]));
-            Games.splice(GamesIndex, 1)
-            console.log("Game destroyed!")
+            const Gamesindex = Games.indexOf(game);
+            io.emit("GameDeleted", (Games[Gamesindex]));
+            Games.splice(Gamesindex, 1)
+            GamesIndex.splice(Gamesindex, 1);
+            console.log("Game destroyed!");
           }
         }
       })
