@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const port = 8080
-const util = require('util');
 const generateQuestion = require('./questions.js');
 app.use(cors('*'));
 app.use(express.json());
@@ -113,7 +112,9 @@ io.on('connection', (client) => {
         Games[game].host = Player;
       }
   } catch {
-    Games.splice(Games.indexOf(Games[game], 1))
+    Games.splice(Games.indexOf(Games[game], 1));
+    client.disconnect();
+    return;
   }
     if (Games[game].players.length == Games[game].maxPlayers) {
       client.emit('successfullyJoined', ["Game is full"])
