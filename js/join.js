@@ -2,6 +2,7 @@ const HostContainerEl = document.getElementById('Hosts');
 const GamesContainerEl = document.getElementById('Games');
 const PlayerNumContainerEl = document.getElementById('PlayerNum');
 const JoinBtnsContainerEl = document.getElementById('joinBtns');
+const backBtn = document.getElementById('back');
 const OpenBoxEl = document.getElementById('Dash-join-btn');
 const GamecodePromptEl = document.querySelector('.Gamecode-prompt');
 const exitBtnEL = document.getElementById('x');
@@ -11,6 +12,7 @@ const ErrorEl = document.getElementById('noGames')
 const errorContainer = document.getElementById('error');
 const errorMessageEl = document.getElementById('error-msg');
 const Username = localStorage.getItem('User');
+const modalOverlay = document.querySelector('.overlay');
 
 let GameBtns = [];
 
@@ -124,17 +126,29 @@ const Startup = () => {
     });
 }
 
+backBtn.addEventListener('click', () => {
+    window.location = '../index.html'
+})
+
 OpenBoxEl.addEventListener('click', () => {
     if (GamecodePromptEl.style.display === "none") {
         GamecodeInput.value = "";
         GamecodePromptEl.style.display = "block";
+        modalOverlay.style.display = 'block';
+        document.querySelector('body').style.overflow = 'hidden';
       } else {
         GamecodePromptEl.style.display = "none";
+        modalOverlay.style.display = 'none';
+        document.querySelector('body').style.overflow = 'auto';
+
       }
 })
 
 exitBtnEL.addEventListener('click', () => {
     GamecodePromptEl.style.display = "none";
+    modalOverlay.style.display = 'none';
+    document.querySelector('body').style.overflow = 'auto';
+
 })
 
 const ErrorMsg = (msg) => {
@@ -179,6 +193,7 @@ const errorAnimation = (errorMsg) => {
     errorMessageEl.textContent = errorMsg;
     errorContainer.style.display = "block";
     errorContainer.style.animation = "down 1s ease-out";
+    setTimeout(() => errorContainer.scrollIntoView({ behavior: 'smooth' }), 500);
     setTimeout(() => {
         errorContainer.style.animation = "up 3s ease-out";
         setTimeout(() => { errorContainer.style.display = "none"; }, 2000)
