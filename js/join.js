@@ -79,23 +79,24 @@ const Startup = () => {
         })
 
         
-        socket.on("GameClosed", () => {
-            alert("noooo")
-        })
 
         socket.on('GameDeleted', (game) => {
+            let index;
             GameBtns.forEach(btn => {
                 if (btn.value == game.gameCode) {
                     
-                    const index = GameBtns.indexOf(btn)                    
+                    index = GameBtns.indexOf(btn)      
+
                     HostContainerEl.children[index + 1].remove()
                     GamesContainerEl.children[index + 1].remove()
                     PlayerNumContainerEl.children[index + 1].remove()
                     JoinBtnsContainerEl.children[index + 1].remove()
-                    
+                    return
                 }
             })
-            if (GameBtns.length === 1) {
+            GameBtns.splice(index, 1);
+
+            if (GameBtns.length === 0) {
                 ErrorMsg('No public games available!')
             }            
         })
