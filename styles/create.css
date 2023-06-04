@@ -80,13 +80,12 @@ body {
 
 #create-game {
     font-size: 1.5rem;
-    width: 15rem;
+    width: 45%;
 }
 
 #exit {
-    margin-top: 0.5rem;
     font-size: 1.5rem;
-    width: 13rem;
+    width: 45%;
 }
 
 #game-code {
@@ -143,4 +142,22 @@ body {
         font-size: 16px;
     }
     
+}
+
+@media (max-width: 660px) {
+    .footer-btns {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin-top: 2rem;
+    }
+
+    #create-game, #exit {
+        width: 50vw;
+    }
+
+    .seprate {
+        gap: 0.5rem;
+    }
 }
