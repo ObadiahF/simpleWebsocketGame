@@ -9,9 +9,6 @@ app.use(express.json());
 
 //websocket setup
 const http = require('http');
-const { copyFileSync } = require('fs');
-const { time } = require('console');
-const { response } = require('express');
 const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {
@@ -82,8 +79,8 @@ app.post('/joinByGameCode', (req, res) => {
 
 
 io.on('connection', (client) => {
-  //console.log('New websocket connection');
   let publicGames = [];
+  
   Games.forEach(game => {
     if (game.privacy !== "Private") {
       publicGames.push(game)
@@ -104,7 +101,7 @@ io.on('connection', (client) => {
       "Points": 0
     }
     const game = GamesIndex.indexOf(Gamecode.toString());
-    
+  
     let host;
     //check if game is full or if player name is already in use
     try {
@@ -124,8 +121,8 @@ io.on('connection', (client) => {
      io.emit("newGame", Games[game]);
      publicGames.push(Games[game]);
     } 
-    client.to(Gamecode);
-    io.emit('successfullyJoined', ["ok", Games[game]])
+    client.join(Gamecode);
+    io.to(Gamecode).emit('successfullyJoined', ["ok", Games[game]])
     }
   })
 
@@ -137,7 +134,7 @@ io.on('connection', (client) => {
         if (player.SocketId === user) {
           const index = game.players.indexOf(user);
           game.players.splice(index, 1)
-          io.emit('successfullyJoined', ["ok", game]);
+          io.to(game).emit('successfullyJoined', ["ok", game]);
           if (game.host.SocketId === user) {
             io.to(game.gameCode).emit("GameClosed");
             const Gamesindex = Games.indexOf(game);
@@ -161,7 +158,7 @@ io.on('connection', (client) => {
 
     
     game.players.splice(game.players.indexOf(player), 1);
-    io.emit('successfullyJoined', ["ok", game]);
+    io.to(game.GameCode).emit('successfullyJoined', ["ok", game]);
 
   })
 
@@ -172,7 +169,7 @@ io.on('connection', (client) => {
     Game.status = "Playing";
     const questions = generateQuestion(Game.gameMode, 5);
     Game.questions = questions;
-    io.emit('Questions', questions);
+    io.to(game.GameCode).emit('Questions', questions);
   })
   
 
@@ -214,7 +211,7 @@ client.on('nextQuestion', (args) => {
 
   const game = findGame(gameCode);
 
-    io.emit('nextQuestion!', (whichQuestion));
+    io.to(game.gameCode).emit('nextQuestion!', (whichQuestion));
 })
 
 });
@@ -257,9 +254,9 @@ const Awardpoints = (io, list, whichQuestion, game) => {
   
 
   setTimeout(() => {
-    io.emit("ShowLeaderBoard", [game.players, whichQuestion, game.host]);
+    io.to(game.gameCode).emit("ShowLeaderBoard", [game.players, whichQuestion, game.host]);
     if (game.questions.length <= whichQuestion + 1) {
-      io.emit('GameOver');
+      io.to(game.gameCode).emit('GameOver');
     }
   }, 5000)
 }
