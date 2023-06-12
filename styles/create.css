@@ -161,3 +161,13 @@ body {
         gap: 0.5rem;
     }
 }
+
+@media (max-width: 373px) {
+    .heading-container h1 {
+        font-size: 2.5rem;
+    }
+
+    .heading-container h2 {
+        font-size: 2rem;
+    }  
+}
