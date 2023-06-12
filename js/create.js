@@ -78,10 +78,11 @@ const requestToCreateNewGame = async (gameSettings) => {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        
         body: JSON.stringify(gameSettings)
     };
 
-    const response = await fetch("http://localhost:8080/createGame", requestOptions).catch(() => {errorAnimation('Error connecting to server')})
+    const response = await fetch("https://websocket-game-server.onrender.com/createGame", requestOptions).catch(() => {errorAnimation('Error connecting to server')})
     if (response.status !== 200) {
         errorAnimation('Error connecting to server')
     } else {

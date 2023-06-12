@@ -31,7 +31,7 @@ const lobbyBtn = document.getElementById('Lobby');
 const leaveBtn = document.getElementById('Leave');
 
 let players = [];
-const socket = io('http://localhost:3000');
+const socket = io('https://websocket-game-server.onrender.com', {transports: ['websocket']});
 let questionsList = [];
 
 socket.on("connect", () => {
