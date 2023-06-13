@@ -18,7 +18,7 @@ let GameBtns = [];
 
 const Startup = () => {
     if (Username === null) window.location = '../index.html'
-    const socket = io('http://localhost:3000');
+    const socket = io('https://websocket-game-server.onrender.com', {transports: ['websocket']});
 
     socket.on('connect', () => {
         socket.emit("JoinableGames");
@@ -173,7 +173,7 @@ JoinByGameCodeBtn.addEventListener('click', async (event) => {
     if (GamecodeInput.value.length !== 6) {
         event.preventDefault();
     } else {
-        const response = await fetch("http://localhost:8080/joinByGameCode", {
+        const response = await fetch("https://websocket-game-server.onrender.com/joinByGameCode", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({"gameCode": GamecodeInput.value})

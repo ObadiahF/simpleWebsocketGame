@@ -227,6 +227,7 @@ body {
     min-height: 10%;
     width: 40%;
     left: 30%;
+    z-index: 99;
 }
 
 
