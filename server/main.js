@@ -169,7 +169,7 @@ io.on('connection', (client) => {
     Game.status = "Playing";
     const questions = generateQuestion(Game.gameMode, 5);
     Game.questions = questions;
-    io.to(game.GameCode).emit('Questions', questions);
+    io.to(Game.GameCode).emit('Questions', questions);
   })
   
 
