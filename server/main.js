@@ -134,7 +134,7 @@ io.on('connection', (client) => {
         if (player.SocketId === user) {
           const index = game.players.indexOf(user);
           game.players.splice(index, 1)
-          io.to(game).emit('successfullyJoined', ["ok", game]);
+          io.to(game.gameCode).emit('successfullyJoined', ["ok", game]);
           if (game.host.SocketId === user) {
             io.to(game.gameCode).emit("GameClosed");
             const Gamesindex = Games.indexOf(game);
@@ -169,7 +169,7 @@ io.on('connection', (client) => {
     Game.status = "Playing";
     const questions = generateQuestion(Game.gameMode, 5);
     Game.questions = questions;
-    io.to(Game.GameCode).emit('Questions', questions);
+    io.to(Game.gameCode).emit('Questions', questions);
   })
   
 
