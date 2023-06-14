@@ -68,7 +68,11 @@ app.post('/joinByGameCode', (req, res) => {
     if (game.players.length == game.maxPlayers) {
       res.status(401).send({'Response': "Game is full"})
     } else {
-      res.sendStatus(200);
+      if (game.status === "lobby") {
+        res.sendStatus(200);
+      } else {
+        res.status(401).send({'Response': "Game is already in progress"})
+      }
     }
   } else {
       res.status(404).send({'Response': "Game not found"})
