@@ -171,7 +171,7 @@ io.on('connection', (client) => {
     if (Game === undefined) return;
 
     Game.status = "Playing";
-    const questions = generateQuestion(Game.gameMode, 5);
+    const questions = generateQuestion(Game.gameMode, 20);
     Game.questions = questions;
     io.to(Game.gameCode).emit('Questions', questions);
   })

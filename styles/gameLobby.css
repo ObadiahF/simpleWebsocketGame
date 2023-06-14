@@ -203,6 +203,11 @@ body {
     display: none;
     background-color: grey;
 }
+
+#start {
+  transition: 300ms ease;
+  background-color: darkgrey;
+}
 .lobbybtns:hover {
   transition: 300ms ease;
   background-color: darkgrey;
