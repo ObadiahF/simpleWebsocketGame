@@ -145,11 +145,14 @@ OpenBoxEl.addEventListener('click', () => {
 })
 
 exitBtnEL.addEventListener('click', () => {
+    closeModal();
+})
+
+const closeModal = () => {
     GamecodePromptEl.style.display = "none";
     modalOverlay.style.display = 'none';
     document.querySelector('body').style.overflow = 'auto';
-
-})
+}
 
 const ErrorMsg = (msg) => {
     ErrorEl.textContent = msg;
@@ -186,6 +189,14 @@ JoinByGameCodeBtn.addEventListener('click', async (event) => {
             GamecodeInput.value = "";
             errorAnimation(message.Response);
         }
+    }
+})
+
+document.querySelector('body').addEventListener('mousedown', (event) => {
+    const targetElement = document.querySelector('.Gamecode-prompt');
+
+    if (event.target !== targetElement && !targetElement.contains(event.target)) {
+        closeModal();
     }
 })
 
