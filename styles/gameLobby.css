@@ -268,6 +268,7 @@ body {
   padding: 0.5rem;
 }
 
+
 .seprateX3 {
   margin-top: 3rem;
 }
@@ -354,9 +355,6 @@ body {
   display: none;
 }
 
-.fa-x {
-  
-}
 
 #added-points {
   margin-top: 2rem;
@@ -408,6 +406,7 @@ body {
   border-radius: 8px;
   padding: 2rem;
   margin-top: 0.5rem;
+  
 }
 
 .UsernameText {
@@ -472,9 +471,7 @@ body {
 }
 
 #NextButton {
-  top: 1rem;
-  right: 1rem;
-  position: absolute
+  
 }
 
 @media screen and (max-width: 992px) {
@@ -485,5 +482,32 @@ body {
     width: 60%;
     min-height: 10vh;
     font-size: 2rem;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .title {
+    font-size: 1rem;
+  }
+
+  #leaderboard h1 {
+    font-size: 3rem;
+  }
+
+  .UsernameText {
+    padding-left: 0.5rem;
+    font-size: 1.5rem;
+  }
+  
+  .Leaderboard-text {
+    font-size: 1.5rem;
+  }
+
+  .UsernameText::before {
+    font-size: 2.5rem;
+  }
+
+  footer {
+    font-size: 0.8rem;
   }
 }

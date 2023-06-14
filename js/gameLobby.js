@@ -303,7 +303,7 @@ const ShowLeaderBoard = (playerData, whichQuestion, host) => {
         const playerContainer = document.createElement('div');
         playerContainer.classList.add('Player-container');
         playerContainer.innerHTML = `
-        <h2 class="Leaderboard-text UsernameText" place="${playerData.indexOf(player) + 1}">${player.Username}</h2>
+        <h2 class="Leaderboard-text UsernameText responsive" place="${playerData.indexOf(player) + 1}">${player.Username}</h2>
         <h2 class="Leaderboard-text">${player.Points}</h2>
         `
         leaderboardContainer.appendChild(playerContainer);
