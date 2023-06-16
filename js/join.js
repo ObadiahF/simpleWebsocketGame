@@ -20,36 +20,19 @@ const Startup = () => {
     if (Username === null) window.location = '../index.html'
     const socket = io('https://websocket-game-server.onrender.com', {transports: ['websocket']});
 
+    //testing
+    //const socket = io('http://localhost:3000')
     socket.on('connect', () => {
         socket.emit("JoinableGames");
 
         socket.on('newGame', (game) => {
-            const Host = document.createElement('h6');
-                Host.textContent = game.host.Username;
-                
-                const Mode = document.createElement('h6');
-                Mode.textContent = game.gameMode;
-
-                const currentPlayers = document.createElement('h6');
-                currentPlayers.textContent = `${game.players.length}/${game.maxPlayers}`
-
-                const JoinBtn = document.createElement('button');
-                JoinBtn.classList.add('join');
-                JoinBtn.textContent = 'Join'
-                JoinBtn.value = game.gameCode;
-
-                GameBtns.push(JoinBtn);
-
-                HostContainerEl.appendChild(Host);
-                GamesContainerEl.appendChild(Mode);
-                PlayerNumContainerEl.appendChild(currentPlayers);
-                JoinBtnsContainerEl.appendChild(JoinBtn)
-                ErrorEl.style.display = "none";
-                btnClick(socket)
+            createGameElements(game);
         })
 
         //first set of games
-        socket.on('GameData', (args) => {            
+        socket.on('GameData', (args) => {         
+            
+            
             args.forEach((game) => {
                 const Host = document.createElement('h6');
                 Host.textContent = game.host.Username;
@@ -83,6 +66,35 @@ const Startup = () => {
         
 
         socket.on('GameDeleted', (game) => {
+            getRidOfGameElements(game);
+        })
+
+        const createGameElements = (game) => {
+            const Host = document.createElement('h6');
+                Host.textContent = game.host.Username;
+                
+                const Mode = document.createElement('h6');
+                Mode.textContent = game.gameMode;
+
+                const currentPlayers = document.createElement('h6');
+                currentPlayers.textContent = `${game.players.length}/${game.maxPlayers}`
+
+                const JoinBtn = document.createElement('button');
+                JoinBtn.classList.add('join');
+                JoinBtn.textContent = 'Join'
+                JoinBtn.value = game.gameCode;
+
+                GameBtns.push(JoinBtn);
+
+                HostContainerEl.appendChild(Host);
+                GamesContainerEl.appendChild(Mode);
+                PlayerNumContainerEl.appendChild(currentPlayers);
+                JoinBtnsContainerEl.appendChild(JoinBtn)
+                ErrorEl.style.display = "none";
+                btnClick(socket)
+        }
+
+        const getRidOfGameElements = (game) => {
             let index;
             GameBtns.forEach(btn => {
                 if (btn.value == game.gameCode) {
@@ -100,16 +112,25 @@ const Startup = () => {
 
             if (GameBtns.length === 0) {
                 ErrorMsg('No public games available!')
-            }            
-        })
+            }      
+        }
+
 
         socket.on('PlayersChanged', (game) => {
             GameBtns.forEach(btn => {
                 if (btn.value == game.gameCode) {
+                    if (game.players.length == game.maxPlayers) {
+                        getRidOfGameElements(game);
+                    } else {
                     const index = GameBtns.indexOf(btn)
-                    PlayerNumContainerEl.children[index + 1].textContent = game.currentPlayers.length;
+                    PlayerNumContainerEl.children[index + 1].textContent = `${game.players.length}/${game.maxPlayers}`;
+                    }
+
                 }
             })
+            if (game.players.length == (game.maxPlayers - 1)) {
+                createGameElements(game);
+            }
         })
 
     })

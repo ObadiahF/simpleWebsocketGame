@@ -92,8 +92,16 @@ io.on('connection', (client) => {
   })
 
   client.on('JoinableGames', () => {
-    client.emit("GameData", publicGames);
-    client.to("OpenGames");
+    const joinableGames = []; 
+    publicGames.forEach((game) => {
+      if (game.status === "lobby") {
+        if (game.maxPlayers > game.players.length) {
+          joinableGames.push(game);
+        }
+      }
+    })
+    client.emit("GameData", joinableGames);
+    //client.to("OpenGames");
   })
 
 
@@ -111,6 +119,15 @@ io.on('connection', (client) => {
     try {
       if (Games[game].players.length === 0) {
         Games[game].host = Player;
+
+        if (Games[game].privacy !== "Private") {
+          Games[game].players.push(Player); 
+          client.join(Gamecode);
+          io.to(Gamecode).emit('successfullyJoined', ["ok", Games[game]])
+          io.emit("newGame", Games[game]);
+          publicGames.push(Games[game]);
+          return
+         }
       }
   } catch {
     Games.splice(Games.indexOf(Games[game], 1));
@@ -120,13 +137,10 @@ io.on('connection', (client) => {
     if (Games[game].players.length == Games[game].maxPlayers) {
       client.emit('successfullyJoined', ["Game is full"])
     } else {
-    Games[game].players.push(Player);
-    if (Games[game].privacy !== "Private") {
-     io.emit("newGame", Games[game]);
-     publicGames.push(Games[game]);
-    } 
+    Games[game].players.push(Player); 
     client.join(Gamecode);
     io.to(Gamecode).emit('successfullyJoined', ["ok", Games[game]])
+    io.emit('PlayersChanged', Games[game]);
     }
   })
 
@@ -137,8 +151,9 @@ io.on('connection', (client) => {
       game.players.forEach(player => {
         if (player.SocketId === user) {
           const index = game.players.indexOf(user);
-          game.players.splice(index, 1)
+          game.players.splice(index, 1);
           io.to(game.gameCode).emit('successfullyJoined', ["ok", game]);
+          io.emit('PlayersChanged', game);
           if (game.host.SocketId === user) {
             io.to(game.gameCode).emit("GameClosed");
             const Gamesindex = Games.indexOf(game);
@@ -261,6 +276,7 @@ const Awardpoints = (io, list, whichQuestion, game) => {
     io.to(game.gameCode).emit("ShowLeaderBoard", [game.players, whichQuestion, game.host]);
     if (game.questions.length <= whichQuestion + 1) {
       io.to(game.gameCode).emit('GameOver');
+      game.status = "lobby";
     }
   }, 5000)
 }
