@@ -4,7 +4,7 @@ const cors = require('cors');
 const port = 8080
 const generateQuestion = require('./questions.js');
 app.use(cors({
-  origin: "https://obadiahfusco.com/",
+  origin: "https://obadiahfusco.com",
   methods: ["GET", "POST"]
 }));
 app.use(express.json());
@@ -15,7 +15,7 @@ const http = require('http');
 const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {
-    origin: "https://obadiahfusco.com/",
+    origin: "https://obadiahfusco.com",
     methods: ["GET", "POST"]
   }
 });
