@@ -171,7 +171,7 @@ io.on('connection', (client) => {
 
   });
 
-  client.on('PlayerKicked', async (data) => {
+  client.on('PlayerKicked', (data) => {
     const gameCodeArg = data[0];
     const playerArg = data[1]
 
@@ -180,7 +180,7 @@ io.on('connection', (client) => {
 
     
     game.players.splice(game.players.indexOf(player), 1);
-    io.to(game.GameCode).emit('successfullyJoined', ["ok", game]);
+    io.to(game.gameCode).emit('successfullyJoined', ["ok", game]);
 
   })
 
@@ -189,9 +189,19 @@ io.on('connection', (client) => {
     if (Game === undefined) return;
 
     Game.status = "Playing";
+    io.emit('GameDeleted', Game);
+    /*
+    Game.questions.length = 0;
+    Game.whoAnswered.length = 0;
+    */
+    Game.players.forEach(player => {
+      player.Questions.length;
+      player.points = 0;
+    })
     const questions = generateQuestion(Game.gameMode, 20);
     Game.questions = questions;
-    io.to(Game.gameCode).emit('Questions', questions);
+
+    io.to(Game.gameCode).emit('Questions', [questions, Game.host.SocketId]);
   })
   
 
@@ -277,9 +287,13 @@ const Awardpoints = (io, list, whichQuestion, game) => {
 
   setTimeout(() => {
     io.to(game.gameCode).emit("ShowLeaderBoard", [game.players, whichQuestion, game.host]);
-    if (game.questions.length <= whichQuestion + 1) {
+
+    if (game.questions.length === whichQuestion + 1) {
       io.to(game.gameCode).emit('GameOver');
       game.status = "lobby";
+      if (game.players !== game.maxPlayers) {
+      io.emit('newGame', game);
+      }
     }
   }, 5000)
 }

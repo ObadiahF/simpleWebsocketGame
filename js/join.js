@@ -136,14 +136,13 @@ const Startup = () => {
     })
 
     socket.on('connect_error', () => {
-        //alert("Error: Failed to connect to server")
+        ErrorMsg('Connection to Server Failed')
     })
     
     
     
     socket.on("disconnect", () => {
-        //alert("Error: Dissconected from server")
-
+        ErrorMsg('Connection to Server Failed')
     });
 }
 

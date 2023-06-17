@@ -31,6 +31,7 @@ const lobbyBtn = document.getElementById('Lobby');
 const leaveBtn = document.getElementById('Leave');
 
 let players = [];
+let questionIndex = 0;
 const socket = io('https://websocket-game-server.onrender.com', {transports: ['websocket']});
 
 //testing
@@ -50,7 +51,7 @@ socket.on("connect", () => {
             goToHome();
         }
         if (args[1].host.SocketId === socket.id) startBtn.style.display = 'block';
-        playerJoin(args[1])
+        playerJoin(args[1]);
 
         startBtn.addEventListener('click', (event) => {
             if (players.length < 2) {
@@ -58,9 +59,11 @@ socket.on("connect", () => {
             } else {
                 if (args[1].host.SocketId === socket.id) {
                     socket.emit('GameStarting', gameCode);
+                    /*
                     startBtn.style.backgroundColor = 'grey';
                     startBtn.style.cursor = 'not-allowed';
                     startBtn.classList.remove('startActive')
+                    */
                 } else {
                     event.preventDefault();
                 }
@@ -68,14 +71,26 @@ socket.on("connect", () => {
         })
     })
 
-    socket.on('Questions', (questions) => {
+    socket.on('Questions', (args) => {
         LobbyEl.style.display = 'none';
+        leaderBoardDiv.style.display = 'none';
+
         explantionScreenEl.style.display = 'block';
         setTimeout(() => {
             explantionScreenEl.style.display = 'none';
             questionsScreenEL.style.display = 'block';
-            questionsList = questions;
-            gameStart(questions, 0);
+            questionsList = args[0];
+            while (leaderboardContainer.firstChild) {
+                leaderboardContainer.removeChild(leaderboardContainer.firstChild);
+            }
+
+            if (args[1] === socket.id) {
+                NextQuestionBtn.style.display = 'block';
+            }
+                endOfGameBtns.style.display = 'none';
+
+            questionIndex = 0;
+            gameStart(args[0]);
         }, 20000)
     })
     
@@ -97,7 +112,7 @@ socket.on("connect", () => {
     socket.on('nextQuestion!', (whichQuestion) => {
             leaderBoardDiv.style.display = 'none';
             questionsScreenEL.style.display = 'block';
-            generateQuestion(questionsList, whichQuestion);
+            generateQuestion(questionsList);
             //delete the previous scoreboard
             while (leaderboardContainer.firstChild) {
                 leaderboardContainer.removeChild(leaderboardContainer.firstChild);
@@ -158,6 +173,11 @@ const playerJoin = (Game) => {
         window.location = '../index.html'
     }
 
+    leaderBoardDiv.style.display = 'none';
+    loadingEl.style.display = 'none';
+    LobbyEl.style.display = 'block';
+
+
     players.forEach(player => {
         player.remove();
         players = [];
@@ -212,32 +232,36 @@ const playerJoin = (Game) => {
         }
 }
 
-const gameStart = (questions, whichQuestion) => {
-    generateQuestion(questions, whichQuestion);
+const gameStart = (questions) => {
+    generateQuestion(questions);
 }
 
-const generateQuestion = (questions, index) => {
-    questionEL.textContent = questions[index].equation;
+const generateQuestion = (questions) => {
+    questionEL.textContent = questions[questionIndex].equation;
   const correctAnswerIndex = Math.floor(Math.random() * 4);
   const usedNumbers = []; // Array to store unique random numbers
+
 
   answerBtns.forEach((btn, idx) => {
     btn.classList.remove('handled');
 
     let randomNum;
     if (idx === correctAnswerIndex) {
-      randomNum = questions[index].answer;
+      randomNum = questions[questionIndex].answer;
     } else {
       do {
         randomNum = Math.floor(Math.random() * 10);
-      } while (usedNumbers.includes(randomNum) || randomNum === questions[index].answer);
+      } while (usedNumbers.includes(randomNum) || randomNum === questions[questionIndex].answer);
     }
+
+
 
     usedNumbers.push(randomNum); // Add unique random number to the array
     btn.textContent = randomNum;
   });
     
     // answer button event listener
+
     answerBtns.forEach((btn) => {
         btn.addEventListener('click', (event) => {
             //I added this because for some reason this event fires twice
@@ -246,8 +270,8 @@ const generateQuestion = (questions, index) => {
             }
             event.target.classList.add('handled');
             const answer = btn.textContent;
-            socket.emit('answeredQuestion', [gameCode, Date.now(), answer, index]);
-            index++
+
+            socket.emit('answeredQuestion', [gameCode, Date.now(), answer, questionIndex]);
             showWaitingScreen();
         }) 
     });
@@ -257,7 +281,7 @@ const generateQuestion = (questions, index) => {
 
 
 const showWaitingScreen = () => {
-    
+    questionIndex++
     questionsScreenEL.style.display = 'none';
     WaitingScreenEL.style.display = 'grid';
     getCurrentPoints().then((points) => WaitingScreenPointsEl.textContent = points);
@@ -334,7 +358,6 @@ lobbyLeaveBtn.addEventListener('click', () => {
 
 const goToHome = () => {
     window.location = '../index.html'
-
 }
 
 startUp();
