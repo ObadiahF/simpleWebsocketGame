@@ -32,10 +32,10 @@ const leaveBtn = document.getElementById('Leave');
 
 let players = [];
 let questionIndex = 0;
-const socket = io('https://websocket-game-server.onrender.com', {transports: ['websocket']});
+//const socket = io('https://websocket-game-server.onrender.com', {transports: ['websocket']});
 
 //testing
-//const socket = io('http://localhost:3000')
+const socket = io('http://localhost:3000')
 let questionsList = [];
 
 socket.on("connect", () => {

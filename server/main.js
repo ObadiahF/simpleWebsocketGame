@@ -195,8 +195,7 @@ io.on('connection', (client) => {
     Game.whoAnswered.length = 0;
     */
     Game.players.forEach(player => {
-      player.Questions.length;
-      player.points = 0;
+      player.Points = 0;
     })
     const questions = generateQuestion(Game.gameMode, 20);
     Game.questions = questions;
