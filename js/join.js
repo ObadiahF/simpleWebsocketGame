@@ -18,10 +18,10 @@ let GameBtns = [];
 
 const Startup = () => {
     if (Username === null) window.location = '../index.html'
-    //const socket = io('https://websocket-game-server.onrender.com', {transports: ['websocket']});
+    const socket = io('https://websocket-game-server.onrender.com', {transports: ['websocket']});
 
     //testing
-    const socket = io('http://localhost:3000')
+    //const socket = io('http://localhost:3000')
     socket.on('connect', () => {
         socket.emit("JoinableGames");
 
